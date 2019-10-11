@@ -1,4 +1,3 @@
-
 //    ______                                     
 //   / ____/___  ________    ____________________
 //  / /   / __ \/ ___/ _ \  / ___/ ___/ ___/ ___/
@@ -10,21 +9,45 @@
 // --- Base styles ---------------------------------------------------
 // -------------------------------------------------------------------
 
+@import "./base/_body.scss";
 @import "./base/_colors.scss";
 @import "./base/_fonts.scss";
-@import "./base/_querys.scss";
-@import "./base/_body.scss";
-@import "./base/_sections.scss";
-@import "./base/_titles.scss";
+@import "./base/_images.scss";
 @import "./base/_links.scss";
 @import "./base/_paragraphs.scss";
-@import "./base/_flexbox.scss";
-@import "./base/_paddings.scss";
-@import "./base/_margins.scss";
-@import "./base/_columns.scss";
-@import "./base/_images.scss";
+@import "./base/_sections.scss";
+@import "./base/_titles.scss";
+
+
+
+// -------------------------------------------------------------------
+// --- Framework styles ----------------------------------------------
+// -------------------------------------------------------------------
+
+@import "./framework/_colors.scss";
+@import "./framework/_columns.scss";
+@import "./framework/_flexbox.scss";
+@import "./framework/_margins.scss";
+@import "./framework/_paddings.scss";
+@import "./framework/_paragraphs.scss";
+@import "./framework/_querys.scss";
+@import "./framework/_sections.scss";
+@import "./framework/_titles.scss";
+
+
+
+
+// -------------------------------------------------------------------
+// --- DOM styles ----------------------------------------------------
+// -------------------------------------------------------------------
+
+@import "./dom/scrollbar.scss";
+
+
+
 
 // -------------------------------------------------------------------
 // --- Components styles ---------------------------------------------
 // -------------------------------------------------------------------
+
 @import "./components/components-styles.scss";
