@@ -10,7 +10,6 @@
 // -------------------------------------------------------------------
 
 @import "./base/_body.scss";
-@import "./base/_colors.scss";
 @import "./base/_fonts.scss";
 @import "./base/_images.scss";
 @import "./base/_links.scss";
@@ -24,16 +23,15 @@
 // --- Framework styles ----------------------------------------------
 // -------------------------------------------------------------------
 
+@import "./framework/_querys.scss";
+@import "./framework/_titles.scss";
 @import "./framework/_colors.scss";
-@import "./framework/_columns.scss";
+@import "./framework/_sections.scss";
 @import "./framework/_flexbox.scss";
 @import "./framework/_margins.scss";
 @import "./framework/_paddings.scss";
 @import "./framework/_paragraphs.scss";
-@import "./framework/_querys.scss";
-@import "./framework/_sections.scss";
-@import "./framework/_titles.scss";
-
+@import "./framework/_columns.scss";
 
 
 

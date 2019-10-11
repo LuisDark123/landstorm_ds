@@ -21,7 +21,7 @@ const cssFilename = 'landstorm-cdn-stylesheet.css'; // Nombre del archivo CSS
 // --------------------------------------------------------------------------------------------
 // --------------------------------------------------------------------------------------------
 
-// Modulos Requeridos
+// Modulos Requeridos ---------------------------------
 const gulp         =  require('gulp');
 const concat       =  require('gulp-concat');
 const uglify       =  require('gulp-uglify');

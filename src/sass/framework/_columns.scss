@@ -1,27 +1,26 @@
-//   ______        __                              
+//    ______        __                              
 //   / ____/____   / /__  __ ____ ___   ____   _____
 //  / /    / __ \ / // / / // __ `__ \ / __ \ / ___/
 // / /___ / /_/ // // /_/ // / / / / // / / /(__  ) 
 // \____/ \____//_/ \__,_//_/ /_/ /_//_/ /_//____/  
 //                                                  
 
-$full_width:        100%;
 $column_start:         1;
 $column_end:          12;
 $col_padding:         4%;
 $margin_left:      8.33%;
-$column_unit: $full_width / $column_end;
-
-.container-full {
-    width: 100%;
-    height: auto;
-    display: flex;
-}
+$column_unit: 100% / $column_end;
 
 .container {
     width: calc(100% - 16%);
     height: auto;
     margin: 30px 8% 30px;
+    display: flex;
+}
+
+.container-full {
+    width: 100%;
+    height: auto;
     display: flex;
 }
 
@@ -33,9 +32,17 @@ $column_unit: $full_width / $column_end;
 }
 
 .col{
-    width: $full_width - 8%;
+    width: 100% - 8%;
     padding: $col_padding;
     margin: 0;
+}
+
+.move-col-left{
+    margin-right: auto;
+}
+
+.move-col-right{
+    margin-left: auto;
 }
 
 @for $i from $column_start through $column_end {
@@ -52,7 +59,6 @@ $column_unit: $full_width / $column_end;
             width: $column_unit * $i - 8%;
             padding: $col_padding;
             margin: 0;
-            background-color: #D50F25;
         }
     }
 }
@@ -63,11 +69,9 @@ $column_unit: $full_width / $column_end;
             width: $column_unit * $i - 8%;
             padding: $col_padding;
             margin: 0;
-            background-color: #3369E8;
         }
     }
 }
-
 
 @for $i from $column_start through $column_end {
     .col-md-#{$i} {
@@ -75,7 +79,6 @@ $column_unit: $full_width / $column_end;
             width: $column_unit * $i - 8%;
             padding: $col_padding;
             margin: 0;
-            background-color: #EEB211;
         }
     }
 }
@@ -86,17 +89,8 @@ $column_unit: $full_width / $column_end;
             width: $column_unit * $i - 8%;
             padding: $col_padding;
             margin: 0;
-            background-color: #009925;
         }
     }
-}
-
-.move-col-left{
-    margin-right: auto;
-}
-
-.move-col-right{
-    margin-left: auto;
 }
 
 @for $i from $column_start through $column_end {
