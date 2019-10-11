@@ -5,17 +5,22 @@
 // \____/\____/_/   \___(_)____/\___/____/____/  
 // 
 
+// Estilizador -> El archivo asigna estilos a un elemento determinado
+// Modificador -> El archivo modifica los estilos asignados por otro archivo. Este tipo de archivo debe cargarse al final de la cola de carga
+// Asignador   -> El archivo contiene variables que serán usadas por otros archivos. Por lo tanto debe cargarse antes de los archivos vinculados.
+// Crítico     -> El archivo asigna estilos pero debe ser cargado al principio de la cola de carga
+
 // -------------------------------------------------------------------
 // --- Base styles ---------------------------------------------------
 // -------------------------------------------------------------------
 
-@import "./base/_body.scss";
-@import "./base/_fonts.scss";
-@import "./base/_images.scss";
-@import "./base/_links.scss";
-@import "./base/_paragraphs.scss";
-@import "./base/_sections.scss";
-@import "./base/_titles.scss";
+@import "./base/_body.scss"; // Estilizador
+@import "./base/_fonts.scss"; // Estilizador
+@import "./base/_images.scss"; // Estilizador
+@import "./base/_links.scss"; // Estilizador
+@import "./base/_paragraphs.scss"; // Estilizador
+@import "./base/_sections.scss"; // Estilizador
+@import "./base/_titles.scss"; // Estilizador
 
 
 
@@ -23,15 +28,15 @@
 // --- Framework styles ----------------------------------------------
 // -------------------------------------------------------------------
 
-@import "./framework/_querys.scss";
-@import "./framework/_titles.scss";
-@import "./framework/_colors.scss";
-@import "./framework/_sections.scss";
-@import "./framework/_flexbox.scss";
-@import "./framework/_margins.scss";
-@import "./framework/_paddings.scss";
-@import "./framework/_paragraphs.scss";
-@import "./framework/_columns.scss";
+@import "./framework/_querys.scss"; // Asignador Crítico
+@import "./framework/_titles.scss"; // Modificador Crítico
+@import "./framework/_colors.scss"; // Asignador
+@import "./framework/_sections.scss"; // Estilizador
+@import "./framework/_flexbox.scss"; // Estilizador
+@import "./framework/_paragraphs.scss"; // Estilizador
+@import "./framework/_columns.scss"; // Estilizador
+@import "./framework/_margins.scss"; // Modificador
+@import "./framework/_paddings.scss"; // Modificador
 
 
 
@@ -39,7 +44,7 @@
 // --- DOM styles ----------------------------------------------------
 // -------------------------------------------------------------------
 
-@import "./dom/scrollbar.scss";
+@import "./dom/scrollbar.scss"; // Estilizador Crítico
 
 
 

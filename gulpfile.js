@@ -43,7 +43,7 @@ const htmlmin      =  require('gulp-htmlmin');
 // Compilación de Pug a Html
 gulp.task('pug', function () {
     return gulp.src('./src/pages/views/**/*.pug')
-        .pipe(pug())
+        .pipe(pug({ pretty: true }))
         .pipe(gulp.dest('./dist/'))
 });
 
@@ -141,7 +141,12 @@ gulp.task('img', () => {
 gulp.task('img_webp', () => {
     return gulp.src('./src/images/*')
         .pipe(imagemin([
-            webp({ quality:50 })
+            webp({ 
+                quality: 100,
+                preset: 'photo',
+                method: 6,
+                sns: 100
+            })
         ]))
         .pipe(extReplace('.webp'))
         .pipe(gulp.dest('./dist/images/'))
@@ -193,7 +198,7 @@ gulp.task('zip', () => {
 
 // Configuración del Watch
 gulp.task('watch', () => {
-    gulp.watch(['./src/pages/**/*.pug', './src/javascripts/**/*.js', './src/sass/**/*.scss'], gulp.series(['pug', 'js', 'sass']));
+    gulp.watch(['./src/pages/**/*.pug', './src/javascripts/**/*.js', './src/sass/**/*.scss'], gulp.series(['pug', 'js', 'sass', 'inject_scripts']));
 });
 
 // Configuración de la tarea bundle

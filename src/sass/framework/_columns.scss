@@ -7,7 +7,8 @@
 
 $column_start:         1;
 $column_end:          12;
-$col_padding:         4%;
+$col_padding:         0;
+$row_padding:         4%;
 $margin_left:      8.33%;
 $column_unit: 100% / $column_end;
 
@@ -16,24 +17,30 @@ $column_unit: 100% / $column_end;
     height: auto;
     margin: 30px 8% 30px;
     display: flex;
+    flex-direction: column;
 }
 
 .container-full {
     width: 100%;
     height: auto;
     display: flex;
+    flex-direction: column;
 }
 
-.container-hybrid {
-	width: calc(100% - 16%);
-    height: auto;
-    margin: 30px 8% 30px;
-    display: flex;
+.container img, .container-full img{
+    width: 100%;
+    object-fit: cover;
 }
 
 .col{
     width: 100% - 8%;
     padding: $col_padding;
+    margin: 0;
+}
+
+.row{
+    display: block;
+    padding: $row_padding;
     margin: 0;
 }
 
