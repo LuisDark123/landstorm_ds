@@ -1,0 +1,20 @@
+
+//    _____           __  _                 
+//   / ___/___  _____/ /_(_)___  ____  _____
+//   \__ \/ _ \/ ___/ __/ / __ \/ __ \/ ___/
+//  ___/ /  __/ /__/ /_/ / /_/ / / / (__  ) 
+// /____/\___/\___/\__/_/\____/_/ /_/____/  
+                                         
+
+$unit_spacing: 30px;
+$one_unit_spacing: $unit_spacing;
+$two_unit_spacing: $unit_spacing * 2;
+$three_unit_spacing: $unit_spacing * 3;
+$four_unit_spacing: $unit_spacing * 4;
+
+section{ margin: $two_unit_spacing 0; }
+
+.section-spacing-1{ margin: $one_unit_spacing 0; }
+.section-spacing-2{ margin: $two_unit_spacing 0; }
+.section-spacing-3{ margin: $three_unit_spacing 0; }
+.section-spacing-4{ margin: $four_unit_spacing 0; }

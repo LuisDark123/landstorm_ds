@@ -1,0 +1,53 @@
+
+//     ____            __    ___                 
+//    / __ \____ _____/ /___/ (_)___  ____ ______
+//   / /_/ / __ `/ __  / __  / / __ \/ __ `/ ___/
+//  / ____/ /_/ / /_/ / /_/ / / / / / /_/ (__  ) 
+// /_/    \__,_/\__,_/\__,_/_/_/ /_/\__, /____/  
+//                                 /____/        
+
+$padding_start:  1;
+$padding_end:    6;
+$padding_unit: 5px;
+
+
+// Padding General
+@for $i from $padding_start through $padding_end {
+    .p-#{$i} {
+        padding: $padding_unit * $i;
+    }
+}
+
+// Padding Left
+@for $i from $padding_start through $padding_end {
+    .pl-#{$i} {
+        padding-left: $padding_unit * $i;
+    }
+}
+
+// Padding Right
+@for $i from $padding_start through $padding_end {
+    .pr-#{$i} {
+        padding-right: $padding_unit * $i;
+    }
+}
+
+// Padding Top
+@for $i from $padding_start through $padding_end {
+    .pt-#{$i} {
+        padding-top: $padding_unit * $i;
+    }
+}
+
+// Padding Bottom
+@for $i from $padding_start through $padding_end {
+    .pb-#{$i} {
+        padding-bottom: $padding_unit * $i;
+    }
+}
+
+.p-none{ padding: 0; }
+.pt-none{ padding-top: 0; }
+.pr-none{ padding-right: 0; }
+.pb-none{ padding-bottom: 0; }
+.pl-none{ padding-left: 0; }
