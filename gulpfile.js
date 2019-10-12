@@ -60,9 +60,7 @@ gulp.task('sass', function () {
         .pipe(sass())
         .pipe(concat(cssFilename))
         .pipe(autoprefixer())
-        .pipe(purgecss({
-            content: ['./dist/**/*.html']
-        }))
+        
         .pipe(cleanCSS())
         .pipe(gulp.dest('./dist/'));
 });
@@ -152,6 +150,12 @@ gulp.task('img_webp', () => {
         .pipe(gulp.dest('./dist/images/'))
 })
 
+// Manejo de los Videos locales
+gulp.task('video', () => {
+    return gulp.src('./src/videos/**')
+        .pipe(gulp.dest('./dist/videos/'))
+});
+
 // Creación de sitemap
 gulp.task('sitemap', () => {
     return gulp.src('./dist/**/*.html')
@@ -202,4 +206,4 @@ gulp.task('watch', () => {
 });
 
 // Configuración de la tarea bundle
-gulp.task('build', gulp.series(['create_dist', 'clean_dist', 'create_public', 'clean_public', 'pug', 'sass', 'js', 'htmlmin', 'inject_scripts', 'components', 'critical', 'favicon', 'font', 'img', 'img_webp', 'sitemap', 'zip']));
+gulp.task('build', gulp.series(['create_dist', 'clean_dist', 'create_public', 'clean_public', 'pug', 'sass', 'js', 'htmlmin', 'inject_scripts', 'components', 'critical', 'favicon', 'font', 'img', 'img_webp', 'video', 'sitemap', 'zip']));

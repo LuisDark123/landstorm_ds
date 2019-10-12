@@ -32,6 +32,11 @@ $column_unit: 100% / $column_end;
     object-fit: cover;
 }
 
+.container video, .container-full video{
+    width: 100%;
+    object-fit: cover;
+}
+
 .col{
     width: 100% - 8%;
     padding: $col_padding;
