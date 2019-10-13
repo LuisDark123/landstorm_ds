@@ -79,7 +79,7 @@ gulp.task('clean_generator', () => {
 
 // Compilación de Pug a Html
 gulp.task('compile_pug', function () {
-    return gulp.src('./src/core/views/pages/**/*.pug')
+    return gulp.src('./src/core/pages/**/*.pug')
         .pipe(pug({ pretty: true }))
         .pipe(gulp.dest('./dist/'))
 });
