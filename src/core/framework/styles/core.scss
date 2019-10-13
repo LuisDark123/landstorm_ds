@@ -25,19 +25,18 @@
 
 
 // -------------------------------------------------------------------
-// --- Framework styles ----------------------------------------------
+// --- Library styles ----------------------------------------------
 // -------------------------------------------------------------------
 
-@import "./framework/_querys.scss"; // Asignador Crítico
-@import "./framework/_titles.scss"; // Modificador Crítico
-@import "./framework/_colors.scss"; // Asignador
-@import "./framework/_sections.scss"; // Estilizador
-@import "./framework/_flexbox.scss"; // Estilizador
-@import "./framework/_paragraphs.scss"; // Estilizador
-@import "./framework/_columns.scss"; // Estilizador
-@import "./framework/_plyr.scss"; // Estilizador
-@import "./framework/_margins.scss"; // Modificador
-@import "./framework/_paddings.scss"; // Modificador
+@import "./library/_querys.scss"; // Asignador Crítico
+@import "./library/_titles.scss"; // Modificador Crítico
+@import "./library/_colors.scss"; // Asignador
+@import "./library/_sections.scss"; // Estilizador
+@import "./library/_flexbox.scss"; // Estilizador
+@import "./library/_paragraphs.scss"; // Estilizador
+@import "./library/_columns.scss"; // Estilizador
+@import "./library/_margins.scss"; // Modificador
+@import "./library/_paddings.scss"; // Modificador
 
 
 
@@ -46,12 +45,3 @@
 // -------------------------------------------------------------------
 
 @import "./dom/scrollbar.scss"; // Estilizador Crítico
-
-
-
-
-// -------------------------------------------------------------------
-// --- Components styles ---------------------------------------------
-// -------------------------------------------------------------------
-
-@import "./components/components-styles.scss";

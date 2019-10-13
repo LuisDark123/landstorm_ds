@@ -1,7 +1,5 @@
 // --------------------------------------------------------------------------------------------
-// --------------------------------------------------------------------------------------------
-// ----- Tokens del Usuario -------------------------------------------------------------------
-// --------------------------------------------------------------------------------------------
+// ----- Configuración del Usuario ------------------------------------------------------------
 // --------------------------------------------------------------------------------------------
 
 // Configuración del Sitemap
@@ -10,18 +8,27 @@ const sitemapFrequence = 'monthly'; // 'always', 'hourly', 'daily', 'weekly', 'm
 const sitemapPriority = '1.0'; // 0.0 to 1.0
 
 
-// Configuración del nombre de los archivos principales
+// Configuración del nombre de los archivos CSS y JS generados por el Framework Landstorm
 const jsFilename = 'landstorm-cdn-script.js'; // Nombre del archivo Javascript
 const cssFilename = 'landstorm-cdn-stylesheet.css'; // Nombre del archivo CSS
 
 
+// Configuración de los Plugins que se utilizaran en el proyecto
+const plugins = [
+    './src/core/plugins/blazy/*.{js,scss}',
+    './src/core/plugins/plyr/*.{js,scss}',
+];
+
+// Configuración de los Componentes que se utilizaran en el proyecto
+const components = [
+    './src/core/views/blazy/*.{js,scss}',
+    './src/core/plugins/plyr/*.{js,scss}',
+];
+
 // --------------------------------------------------------------------------------------------
-// --------------------------------------------------------------------------------------------
-// ----- Inicio de Configuración de Gulp ------------------------------------------------------
-// --------------------------------------------------------------------------------------------
+// ----- Modulos Gulp -------------------------------------------------------------------------
 // --------------------------------------------------------------------------------------------
 
-// Modulos Requeridos ---------------------------------
 const gulp         =  require('gulp');
 const concat       =  require('gulp-concat');
 const uglify       =  require('gulp-uglify');
@@ -40,11 +47,142 @@ const purgecss     =  require('gulp-purgecss');
 const inject       =  require('gulp-inject');
 const htmlmin      =  require('gulp-htmlmin');
 
+
+// --------------------------------------------------------------------------------------------
+// ----- Configuración para Desarrollo --------------------------------------------------------
+// --------------------------------------------------------------------------------------------
+
+
+// Crear el directorio dist
+gulp.task('create_dist', () => {
+    return gulp.src('./src/')
+        .pipe(gulp.dest('./dist/'))
+});
+
+// Limpiar la carpeta dist
+gulp.task('clean_dist', () => {
+    return gulp.src('./dist/*')
+        .pipe(clean())
+});
+
 // Compilación de Pug a Html
-gulp.task('pug', function () {
-    return gulp.src('./src/pages/views/**/*.pug')
+gulp.task('compile_pug', function () {
+    return gulp.src('./src/core/views/pages/**/*.pug')
         .pipe(pug({ pretty: true }))
         .pipe(gulp.dest('./dist/'))
+});
+
+// Compilación de SASS y conversion a CSS
+gulp.task('style_framework', function () {
+    return gulp.src('./src/core/framework/styles/core.scss')
+        .pipe(sass())
+        .pipe(autoprefixer())
+        .pipe(concat('landstorm-framework-style.css'))
+        .pipe(gulp.dest('./src/core/app/'))
+});
+
+// Minificación y concatenación de Javascript
+gulp.task('script_framework', () => {
+    return gulp.src('./src/core/framework/scripts/**/*.js')
+        .pipe(concat('landstorm-framework-script.js'))
+        .pipe(uglify())
+        .pipe(gulp.dest('./src/core/app/'))
+});
+
+// Importación de los Plugins
+gulp.task('plugins', () => {
+    return gulp.src(plugins)
+        .pipe(gulp.dest('./src/core/app/'))
+});
+
+// Empaquetado de archivos sass a dist
+gulp.task('styles_packaging', function () {
+    return gulp.src('./src/core/app/*.scss')
+        .pipe(sass())
+        .pipe(autoprefixer())
+        .pipe(concat(cssFilename))
+        .pipe(gulp.dest('./dist/'))
+});
+
+// Empaquetado de archivos js a dist
+gulp.task('scripts_packaging', () => {
+    return gulp.src('./src/core/app/*.js')
+        .pipe(concat(jsFilename))
+        .pipe(uglify())
+        .pipe(gulp.dest('./dist/'))
+});
+
+// Inyección de CDNs
+gulp.task('inject_scripts', () => {
+    return gulp.src('./dist/**/*.html')
+        .pipe(inject(gulp.src(['./dist/**/*.js', './dist/**/*.css'], { read: false }), { relative: true }))
+        .pipe(gulp.dest('./dist'))
+});
+
+// Manejo de las fuentes web
+gulp.task('font', () => {
+    return gulp.src('./src/fonts/**')
+        .pipe(gulp.dest('./dist/'))
+});
+
+// Manejo del favicon
+gulp.task('favicon', () => {
+    return gulp.src('./src/favicons/**')
+        .pipe(gulp.dest('./dist/favicons/'))
+});
+
+// Minificado de las imagenes jpg y png
+gulp.task('img', () => {
+    return gulp.src('./src/images/*')
+        .pipe(imagemin([
+            imagemin.gifsicle({ interlaced: true }),
+            imagemin.jpegtran({ progressive: true }),
+            //imagemin.optipng({ optimizationLevel: 5 }),
+            imagemin.svgo({
+                plugins: [
+                    { removeViewBox: true },
+                    { cleanupIDs: false }
+                ]
+            })
+        ]))
+        .pipe(gulp.dest('./dist/images/'))
+});
+
+// Conversión de imagenes webp
+gulp.task('img_webp', () => {
+    return gulp.src('./src/images/*')
+        .pipe(imagemin([
+            webp({
+                quality: 100,
+                preset: 'photo'
+            })
+        ]))
+        .pipe(extReplace('.webp'))
+        .pipe(gulp.dest('./dist/images/'))
+})
+
+// Manejo de los Videos locales
+gulp.task('video', () => {
+    return gulp.src('./src/videos/**')
+        .pipe(gulp.dest('./dist/videos/'))
+});
+
+gulp.task('dev', gulp.series(['create_dist', 'clean_dist', 'compile_pug', 'style_framework', 'script_framework', 'inject_scripts', 'font', 'favicon', 'img', 'img_webp','video']));
+
+// --------------------------------------------------------------------------------------------
+// ----- Configuración para Producción --------------------------------------------------------
+// --------------------------------------------------------------------------------------------
+
+// Crear el directorio public
+gulp.task('create_public', () => {
+    return gulp.src('./src/')
+        .pipe(gulp.dest('./dist/'))
+});
+
+// Limpiar la carpeta public
+gulp.task('clean_public', () => {
+    return gulp.src('./public/*')
+        .pipe(clean());
 });
 
 // Minificación de los archivos html
@@ -54,16 +192,6 @@ gulp.task('htmlmin', () => {
     .pipe(gulp.dest('./dist/'));
 });
 
-// Compilación de SASS y conversion a CSS
-gulp.task('sass', function () {
-    return gulp.src('./src/sass/*.scss')
-        .pipe(sass())
-        .pipe(concat(cssFilename))
-        .pipe(autoprefixer())
-        
-        .pipe(cleanCSS())
-        .pipe(gulp.dest('./dist/'));
-});
 
 // Compilación de Componentes (SASS)
 gulp.task('components', function () {
@@ -89,72 +217,9 @@ gulp.task('critical', () => {
         .pipe(gulp.dest('dist/'));
 });
 
-// Inyección de CDNs
-gulp.task('inject_scripts', () => {
-    return gulp.src('./dist/**/*.html')
-        .pipe(inject(gulp.src(['./dist/**/*.js', './dist/**/*.css'], { read: false }), { relative: true }))
-        .pipe(gulp.dest('./dist'));
-});
 
 
-// Minificación y concatenación de Javascript
-gulp.task('js', () => {
-    return gulp.src('./src/javascripts/*.js')
-        .pipe(concat(jsFilename))
-        .pipe(uglify())
-        .pipe(gulp.dest('./dist/'));
-});
 
-// Manejo de las fuentes web
-gulp.task('font', () => {
-   return gulp.src('./src/fonts/**')
-    .pipe(gulp.dest('./dist/'))
-});
-
-// Manejo del favicon
-gulp.task('favicon', () => {
-    return gulp.src('./src/favicons/**')
-    .pipe(gulp.dest('./dist/favicons/'))
-});
-
-// Minificado de las imagenes jpg y png
-gulp.task('img', () => {
-    return gulp.src('./src/images/*')
-        .pipe(imagemin([
-            imagemin.gifsicle({ interlaced: true }),
-            imagemin.jpegtran({ progressive: true }),
-            //imagemin.optipng({ optimizationLevel: 5 }),
-            imagemin.svgo({
-                plugins: [
-                    { removeViewBox: true },
-                    { cleanupIDs: false }
-                ]
-            })
-        ]))
-        .pipe(gulp.dest('./dist/images/'))
-});
-
-
-// Conversión de imagenes webp
-gulp.task('img_webp', () => {
-    return gulp.src('./src/images/*')
-        .pipe(imagemin([
-            webp({ 
-                quality: 100,
-                preset: 'photo',
-                method: 6,
-                sns: 100
-            })
-        ]))
-        .pipe(extReplace('.webp'))
-        .pipe(gulp.dest('./dist/images/'))
-})
-
-// Manejo de los Videos locales
-gulp.task('video', () => {
-    return gulp.src('./src/videos/**')
-        .pipe(gulp.dest('./dist/videos/'))
-});
 
 // Creación de sitemap
 gulp.task('sitemap', () => {
@@ -168,29 +233,9 @@ gulp.task('sitemap', () => {
         .pipe(gulp.dest('./dist'));
 });
 
-// Crear el directorio dist
-gulp.task('create_dist', () => {
-    return gulp.src('./src/')
-        .pipe(gulp.dest('./dist/'))
-});
 
-// Limpiar la carpeta dist
-gulp.task('clean_dist', () => {
-    return gulp.src('./dist/*')
-        .pipe(clean());
-});
 
-// Crear el directorio public
-gulp.task('create_public', () => {
-    return gulp.src('./src/')
-        .pipe(gulp.dest('./dist/'))
-});
 
-// Limpiar la carpeta public
-gulp.task('clean_public', () => {
-    return gulp.src('./public/*')
-        .pipe(clean());
-});
 
 // Crear un zip
 gulp.task('zip', () => {
@@ -202,8 +247,7 @@ gulp.task('zip', () => {
 
 // Configuración del Watch
 gulp.task('watch', () => {
-    gulp.watch(['./src/pages/**/*.pug', './src/javascripts/**/*.js', './src/sass/**/*.scss'], gulp.series(['pug', 'js', 'sass', 'inject_scripts']));
+    gulp.watch(['./src/pages/**/*.pug', './src/javascripts/**/*.js', './src/sass/**/*.scss'], gulp.series(['inject_scripts']));
 });
 
 // Configuración de la tarea bundle
-gulp.task('build', gulp.series(['create_dist', 'clean_dist', 'create_public', 'clean_public', 'pug', 'sass', 'js', 'htmlmin', 'inject_scripts', 'components', 'critical', 'favicon', 'font', 'img', 'img_webp', 'video', 'sitemap', 'zip']));
