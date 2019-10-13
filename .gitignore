@@ -1,5 +1,6 @@
 node_modules
 dist
+generator
 package
 package.json
 package-lock.json

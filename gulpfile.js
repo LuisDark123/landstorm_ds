@@ -15,8 +15,8 @@ const cssFilename = 'landstorm-cdn-stylesheet.css'; // Nombre del archivo CSS
 
 // Configuración de los Plugins que se utilizaran en el proyecto
 const plugins = [
-    './src/core/plugins/blazy/*.{js,scss}',
-    './src/core/plugins/plyr/*.{js,scss}',
+    './src/core/plugins/blazy/*.{js,css}',
+    './src/core/plugins/plyr/*.{js,css}',
 ];
 
 // Configuración de los Componentes que se utilizaran en el proyecto
@@ -65,6 +65,18 @@ gulp.task('clean_dist', () => {
         .pipe(clean())
 });
 
+// Crear el directorio generator
+gulp.task('create_generator', () => {
+    return gulp.src('./src/')
+        .pipe(gulp.dest('./generator/'))
+});
+
+// Limpiar la carpeta generator
+gulp.task('clean_generator', () => {
+    return gulp.src('./generator/*')
+        .pipe(clean())
+});
+
 // Compilación de Pug a Html
 gulp.task('compile_pug', function () {
     return gulp.src('./src/core/views/pages/**/*.pug')
@@ -77,27 +89,30 @@ gulp.task('style_framework', function () {
     return gulp.src('./src/core/framework/styles/core.scss')
         .pipe(sass())
         .pipe(autoprefixer())
-        .pipe(concat('landstorm-framework-style.css'))
-        .pipe(gulp.dest('./src/core/app/'))
+        .pipe(concat('0a-framework-style.css'))
+        .pipe(gulp.dest('./generator/'))
 });
 
 // Minificación y concatenación de Javascript
 gulp.task('script_framework', () => {
     return gulp.src('./src/core/framework/scripts/**/*.js')
-        .pipe(concat('landstorm-framework-script.js'))
+        .pipe(concat('0a-framework-script.js'))
         .pipe(uglify())
-        .pipe(gulp.dest('./src/core/app/'))
+        .pipe(gulp.dest('./generator/'))
 });
 
+// Importar el Framework a la carpeta Generator
+gulp.task('import_framework', gulp.series(['style_framework', 'script_framework']));
+
 // Importación de los Plugins
-gulp.task('plugins', () => {
+gulp.task('import_plugins', () => {
     return gulp.src(plugins)
-        .pipe(gulp.dest('./src/core/app/'))
+        .pipe(gulp.dest('./generator/'))
 });
 
 // Empaquetado de archivos sass a dist
 gulp.task('styles_packaging', function () {
-    return gulp.src('./src/core/app/*.scss')
+    return gulp.src('./generator/*.css')
         .pipe(sass())
         .pipe(autoprefixer())
         .pipe(concat(cssFilename))
@@ -106,11 +121,14 @@ gulp.task('styles_packaging', function () {
 
 // Empaquetado de archivos js a dist
 gulp.task('scripts_packaging', () => {
-    return gulp.src('./src/core/app/*.js')
+    return gulp.src('./generator/*.js')
         .pipe(concat(jsFilename))
         .pipe(uglify())
         .pipe(gulp.dest('./dist/'))
 });
+
+// Empaquetar todos los recursos a la carpeta Dist
+gulp.task('generate_assets', gulp.series(['styles_packaging', 'scripts_packaging']));
 
 // Inyección de CDNs
 gulp.task('inject_scripts', () => {
