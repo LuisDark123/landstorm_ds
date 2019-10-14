@@ -21,8 +21,7 @@ const plugins = [
 
 // Configuración de los Componentes que se utilizaran en el proyecto
 const components = [
-    './src/core/views/blazy/*.{js,scss}',
-    './src/core/plugins/plyr/*.{js,scss}',
+    './src/core/components/videoplayers/videoplayer_vanilla/*.scss'
 ];
 
 // --------------------------------------------------------------------------------------------
@@ -77,14 +76,25 @@ gulp.task('clean_generator', () => {
         .pipe(clean())
 });
 
-// Compilación de Pug a Html
-gulp.task('compile_pug', function () {
-    return gulp.src('./src/core/pages/**/*.pug')
-        .pipe(pug({ pretty: true }))
-        .pipe(gulp.dest('./dist/'))
+// Importar el Framework a la carpeta Generator
+gulp.task('create_folders', gulp.series(['create_dist', 'clean_dist', 'create_generator', 'clean_generator']));
+
+// Importación de los Plugins
+gulp.task('import_plugins', () => {
+    return gulp.src(plugins)
+        .pipe(gulp.dest('./generator/'))
 });
 
-// Compilación de SASS y conversion a CSS
+// Importación de los estilos de todos los componentes
+gulp.task('import_components', function () {
+    return gulp.src(components)
+        .pipe(sass())
+        .pipe(autoprefixer())
+        .pipe(concat('all-components-styles.scss'))
+        .pipe(gulp.dest('./src/core/framework/styles/components-styles/'))
+});
+
+// Compilación de SASS y conversion a CSS del Framework
 gulp.task('style_framework', function () {
     return gulp.src('./src/core/framework/styles/core.scss')
         .pipe(sass())
@@ -93,7 +103,7 @@ gulp.task('style_framework', function () {
         .pipe(gulp.dest('./generator/'))
 });
 
-// Minificación y concatenación de Javascript
+// Minificación y concatenación de JS del Framework
 gulp.task('script_framework', () => {
     return gulp.src('./src/core/framework/scripts/**/*.js')
         .pipe(concat('0a-framework-script.js'))
@@ -102,15 +112,9 @@ gulp.task('script_framework', () => {
 });
 
 // Importar el Framework a la carpeta Generator
-gulp.task('import_framework', gulp.series(['style_framework', 'script_framework']));
+gulp.task('generate_assets', gulp.series(['import_plugins', 'import_components', 'style_framework', 'script_framework']));
 
-// Importación de los Plugins
-gulp.task('import_plugins', () => {
-    return gulp.src(plugins)
-        .pipe(gulp.dest('./generator/'))
-});
-
-// Empaquetado de archivos sass a dist
+// Empaquetado de archivos sass de Generator a Dist
 gulp.task('styles_packaging', function () {
     return gulp.src('./generator/*.css')
         .pipe(sass())
@@ -119,7 +123,7 @@ gulp.task('styles_packaging', function () {
         .pipe(gulp.dest('./dist/'))
 });
 
-// Empaquetado de archivos js a dist
+// Empaquetado de archivos js de Generator a Dist
 gulp.task('scripts_packaging', () => {
     return gulp.src('./generator/*.js')
         .pipe(concat(jsFilename))
@@ -128,7 +132,14 @@ gulp.task('scripts_packaging', () => {
 });
 
 // Empaquetar todos los recursos a la carpeta Dist
-gulp.task('generate_assets', gulp.series(['styles_packaging', 'scripts_packaging']));
+gulp.task('bundle_cdn', gulp.series(['styles_packaging', 'scripts_packaging']));
+
+// Compilación de Pug a Html
+gulp.task('compile_pug', function () {
+    return gulp.src('./src/core/pages/**/*.pug')
+        .pipe(pug({ pretty: true }))
+        .pipe(gulp.dest('./dist/'))
+});
 
 // Inyección de CDNs
 gulp.task('inject_scripts', () => {
@@ -137,21 +148,23 @@ gulp.task('inject_scripts', () => {
         .pipe(gulp.dest('./dist'))
 });
 
+gulp.task('generate_pages', gulp.series(['compile_pug', 'inject_scripts']));
+
 // Manejo de las fuentes web
 gulp.task('font', () => {
-    return gulp.src('./src/fonts/**')
+    return gulp.src('./src/assets/fonts/**')
         .pipe(gulp.dest('./dist/'))
 });
 
 // Manejo del favicon
 gulp.task('favicon', () => {
-    return gulp.src('./src/favicons/**')
+    return gulp.src('./src/assets/favicons/**')
         .pipe(gulp.dest('./dist/favicons/'))
 });
 
 // Minificado de las imagenes jpg y png
 gulp.task('img', () => {
-    return gulp.src('./src/images/*')
+    return gulp.src('./src/assets/images/*')
         .pipe(imagemin([
             imagemin.gifsicle({ interlaced: true }),
             imagemin.jpegtran({ progressive: true }),
@@ -168,7 +181,7 @@ gulp.task('img', () => {
 
 // Conversión de imagenes webp
 gulp.task('img_webp', () => {
-    return gulp.src('./src/images/*')
+    return gulp.src('./src/assets/images/*')
         .pipe(imagemin([
             webp({
                 quality: 100,
@@ -181,11 +194,13 @@ gulp.task('img_webp', () => {
 
 // Manejo de los Videos locales
 gulp.task('video', () => {
-    return gulp.src('./src/videos/**')
+    return gulp.src('./src/assets/videos/**')
         .pipe(gulp.dest('./dist/videos/'))
 });
 
-gulp.task('dev', gulp.series(['create_dist', 'clean_dist', 'compile_pug', 'style_framework', 'script_framework', 'inject_scripts', 'font', 'favicon', 'img', 'img_webp','video']));
+gulp.task('bundle_assets', gulp.series(['font', 'favicon', 'img', 'img_webp', 'video']));
+
+gulp.task('pack', gulp.series(['create_folders', 'generate_assets', 'bundle_cdn', 'generate_pages', 'bundle_assets']));
 
 // --------------------------------------------------------------------------------------------
 // ----- Configuración para Producción --------------------------------------------------------
