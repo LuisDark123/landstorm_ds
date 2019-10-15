@@ -5,12 +5,13 @@
 // \____/ \____//_/ \__,_//_/ /_/ /_//_/ /_//____/  
 //                                                  
 
+$full_width:        100%;
 $column_start:         1;
 $column_end:          12;
 $col_padding:         0;
 $row_padding:         4%;
 $margin_left:      8.33%;
-$column_unit: 100% / $column_end;
+$column_unit: $full_width / $column_end;
 
 .container {
     width: calc(100% - 16%);
@@ -38,7 +39,7 @@ $column_unit: 100% / $column_end;
 }
 
 .col{
-    width: 100% - 8%;
+    width: 100%;
     padding: $col_padding;
     margin: 0;
 }
@@ -59,7 +60,7 @@ $column_unit: 100% / $column_end;
 
 @for $i from $column_start through $column_end {
     .col-#{$i} {
-        width: $column_unit * $i - 8%;
+        width: $column_unit * $i;
         padding: $col_padding;
         margin: 0;
     }
@@ -68,7 +69,7 @@ $column_unit: 100% / $column_end;
 @for $i from $column_start through $column_end {
     .col-xl-#{$i} {
         @media #{$xl} {
-            width: $column_unit * $i - 8%;
+            width: $column_unit * $i;
             padding: $col_padding;
             margin: 0;
         }
@@ -78,7 +79,7 @@ $column_unit: 100% / $column_end;
 @for $i from $column_start through $column_end {
     .col-lg-#{$i} {
         @media #{$lg} {
-            width: $column_unit * $i - 8%;
+            width: $column_unit * $i;
             padding: $col_padding;
             margin: 0;
         }
@@ -88,7 +89,7 @@ $column_unit: 100% / $column_end;
 @for $i from $column_start through $column_end {
     .col-md-#{$i} {
         @media #{$md} {
-            width: $column_unit * $i - 8%;
+            width: $column_unit * $i;
             padding: $col_padding;
             margin: 0;
         }
@@ -98,7 +99,7 @@ $column_unit: 100% / $column_end;
 @for $i from $column_start through $column_end {
     .col-sm-#{$i} {
         @media #{$sm} {
-            width: $column_unit * $i - 8%;
+            width: $column_unit * $i;
             padding: $col_padding;
             margin: 0;
         }
