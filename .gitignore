@@ -1,6 +1,7 @@
 node_modules
-dist
+public
 generator
-package
+packages
+review
 package.json
 package-lock.json
