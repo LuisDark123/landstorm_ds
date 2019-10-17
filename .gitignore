@@ -3,5 +3,7 @@ public
 generator
 packages
 review
+design
+tools
 package.json
 package-lock.json

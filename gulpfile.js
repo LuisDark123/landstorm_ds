@@ -9,8 +9,8 @@ const sitemapPriority = '1.0'; // 0.0 to 1.0
 
 
 // Configuración del nombre de los archivos CSS y JS generados por el Framework Landstorm
-const jsFilename = 'landstorm-cdn-script.js'; // Nombre del archivo Javascript
-const cssFilename = 'landstorm-cdn-stylesheet.css'; // Nombre del archivo CSS
+const jsFilename = 'landstorm-cdn-script.js'; // Nombre del archivo maestro Javascript
+const cssFilename = 'landstorm-cdn-stylesheet.css'; // Nombre del archivo maestro CSS
 
 
 // Configuración de los Plugins que se utilizaran en el proyecto
@@ -24,6 +24,7 @@ const components = [
     './src/core/components/videoplayers/videoplayer_vanilla/*.{js,scss}'
 ];
 
+// Folders 
 
 
 // --------------------------------------------------------------------------------------------
@@ -188,19 +189,19 @@ gulp.task('setup_pages', gulp.series(['compile_pug', 'inject_scripts']));
 //-----------------------------------------------------------------------
 // Manejo de las fuentes web
 gulp.task('font', () => {
-    return gulp.src('./src/assets/fonts/**')
+    return gulp.src('./src/fonts/**')
         .pipe(gulp.dest('./review/'))
 });
 
 // Manejo del favicon
 gulp.task('favicon', () => {
-    return gulp.src('./src/assets/favicons/**')
+    return gulp.src('./src/favicons/**')
         .pipe(gulp.dest('./review/favicons/'))
 });
 
 // Minificado de las imagenes jpg y png
 gulp.task('img', () => {
-    return gulp.src('./src/assets/images/*')
+    return gulp.src('./src/images/*')
         .pipe(imagemin([
             imagemin.gifsicle({ interlaced: true }),
             imagemin.jpegtran({ progressive: true }),
@@ -217,12 +218,9 @@ gulp.task('img', () => {
 
 // Conversión de imagenes webp
 gulp.task('img_webp', () => {
-    return gulp.src('./src/assets/images/*')
+    return gulp.src(['./src/images/**/*.{png,jpg,jpeg}'])
         .pipe(imagemin([
-            webp({
-                quality: 100,
-                preset: 'photo'
-            })
+            webp({ quality: 100 })
         ]))
         .pipe(extReplace('.webp'))
         .pipe(gulp.dest('./review/images/'))
@@ -230,14 +228,14 @@ gulp.task('img_webp', () => {
 
 // Manejo de los Videos locales
 gulp.task('video', () => {
-    return gulp.src('./src/assets/videos/**')
+    return gulp.src('./src/videos/**')
         .pipe(gulp.dest('./review/videos/'))
 });
 
 gulp.task('setup_assets', gulp.series(['font', 'favicon', 'img', 'img_webp', 'video']));
 
 
-gulp.task('setup', gulp.series(['setup_review', 'setup_generator', 'setup_framework', 'setup_components', 'setup_plugins', 'setup_pages', 'setup_assets']));
+gulp.task('start', gulp.series(['setup_review', 'setup_generator', 'setup_framework', 'setup_components', 'setup_plugins', 'setup_pages', 'setup_assets']));
 
 
 
