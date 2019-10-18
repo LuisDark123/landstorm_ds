@@ -14,22 +14,18 @@ const frameworkFolder = 'framework';
 const frameworkStylesFolder = 'styles';
 const frameworkScriptsFolder = 'scripts';
 const frameworkStylesCore = 'core.scss';
-const pagesFolder = "pages";
-const fontsFolder = "fonts";
-const faviconsFolder = "favicons";
-const imagesFolder = "images";
-const videosFolder = "videos";
-
-// Configuración del Sitemap
-const sitemapUrl = 'https://landstorm.dev';
-const sitemapFrequence = 'monthly'; // 'always', 'hourly', 'daily', 'weekly', 'monthly', 'yearly', 'never'
-const sitemapPriority = '1.0'; // 0.0 to 1.0
+const pagesFolder = 'pages';
+const fontsFolder = 'fonts';
+const faviconsFolder = 'favicons';
+const imagesFolder = 'images';
+const videosFolder = 'videos';
+const zipFolder = 'packages';
 
 
 // Configuración del nombre de los archivos CSS y JS generados por el Framework Landstorm
 const jsFilename = 'landstorm-cdn-script.js'; // Nombre del archivo maestro Javascript
 const cssFilename = 'landstorm-cdn-stylesheet.css'; // Nombre del archivo maestro CSS
-
+const zipFilename = 'cpanel.zip'
 
 // Configuración de los Plugins que se utilizaran en el proyecto
 const pluginsRute = `./${srcFolder}/${coreFolder}/${pluginsFolder}/`;
@@ -40,7 +36,6 @@ const plugins = [
     `${pluginsRute}plyr${pluginsExtension}`,
 ];
 
-
 // Configuración de los Componentes que se utilizaran en el proyecto
 const componentsRute = `./${srcFolder}/${coreFolder}/${componentsFolder}/`;
 const componentsExtension = `/*.{js,scss}`;
@@ -48,6 +43,12 @@ const componentsExtension = `/*.{js,scss}`;
 const components = [
     `${componentsRute}videoplayers/videoplayer_vanilla${componentsExtension}`,
 ];
+
+// Configuración del Sitemap
+const sitemapUrl = 'https://landstorm.dev';
+const sitemapFrequence = 'monthly'; // 'always', 'hourly', 'daily', 'weekly', 'monthly', 'yearly', 'never'
+const sitemapPriority = '1.0'; // 0.0 to 1.0
+
 
 // --------------------------------------------------------------------------------------------
 // ----- Modulos Gulp -------------------------------------------------------------------------
@@ -223,7 +224,7 @@ gulp.task('favicon', () => {
 
 // Minificado de las imagenes jpg y png
 gulp.task('img', () => {
-    return gulp.src(`./${srcFolder}/${imagesFolder}/*`)
+    return gulp.src([`./${srcFolder}/${imagesFolder}/x1/*.{png,jpg,jpeg}`, `./${srcFolder}/${imagesFolder}/x2/*.{png,jpg,jpeg}`])
         .pipe(imagemin([
             imagemin.gifsicle({ interlaced: true }),
             imagemin.jpegtran({ progressive: true }),
@@ -240,7 +241,7 @@ gulp.task('img', () => {
 
 // Conversión de imagenes webp
 gulp.task('img_webp', () => {
-    return gulp.src([`./${srcFolder}/${imagesFolder}/**/*.{png,jpg,jpeg}`])
+    return gulp.src([`./${srcFolder}/${imagesFolder}/x1/*.{png,jpg,jpeg}`, `./${srcFolder}/${imagesFolder}/x2/*.{png,jpg,jpeg}`])
         .pipe(imagemin([
             webp({ quality: 100 })
         ]))
@@ -269,13 +270,13 @@ gulp.task('start', gulp.series(['setup_review', 'setup_generator', 'setup_framew
 
 // Crear el directorio public
 gulp.task('create_public', () => {
-    return gulp.src('./src/')
-        .pipe(gulp.dest('./public/'))
+    return gulp.src(`./${srcFolder}/`)
+        .pipe(gulp.dest(`./${distFolder}/`))
 });
 
 // Limpiar la carpeta public
 gulp.task('clean_public', () => {
-    return gulp.src('./public/*')
+    return gulp.src(`./${distFolder}/*`)
         .pipe(clean());
 });
 
@@ -285,13 +286,13 @@ gulp.task('build_public', gulp.series(['create_public', 'clean_public']));
 
 // Crear el directorio bundle en generator
 gulp.task('create_bundle', () => {
-    return gulp.src('./src/')
-        .pipe(gulp.dest('./generator/bundle/'))
+    return gulp.src(`./${srcFolder}/`)
+        .pipe(gulp.dest(`./${generatorFolder}/bundle/`))
 });
 
 // Limpiar la carpeta public
 gulp.task('clean_bundle', () => {
-    return gulp.src('./generator/bundle/*')
+    return gulp.src(`./${generatorFolder}/bundle/*`)
         .pipe(clean());
 });
 
@@ -301,80 +302,80 @@ gulp.task('build_bundle', gulp.series(['create_bundle', 'clean_bundle']));
 // ---------------------------------------------------------------------------
 // Importar los archivos html
 gulp.task('prepare_html', () => {
-  return gulp.src('./review/**/*.html')
-    .pipe(gulp.dest('./public/'));
+  return gulp.src(`./${devFolder}/**/*.html`)
+    .pipe(gulp.dest(`./${distFolder}/`));
 });
 
 // Realizar la purga de los estilos del framework
 gulp.task('prepare_framework', () => {
-    return gulp.src('./review/01-framework.css')
+    return gulp.src(`./${devFolder}/01-framework.css`)
         .pipe(concat('framework_purge.css'))
         .pipe(autoprefixer())
         .pipe(purgecss({
-            content: ['./review/**/*.html']
+            content: [`./${devFolder}/**/*.html`]
         }))
         .pipe(cleanCSS())
-        .pipe(gulp.dest('./generator/bundle/'));
+        .pipe(gulp.dest(`./${generatorFolder}/bundle/`));
 });
 
 // Importar los scripts del framework, los componentes y los plugins
 gulp.task('prepare_js_files', () => {
-    return gulp.src('./review/*.js')
-        .pipe(gulp.dest('./generator/bundle/'))
+    return gulp.src(`./${devFolder}/*.js`)
+        .pipe(gulp.dest(`./${generatorFolder}/bundle/`))
 });
 
 // Importar los estilos de los componentes y los plugins
 gulp.task('prepare_addons', () => {
-    return gulp.src(['./review/02-components.css', './review/03-plugins.css'])
+    return gulp.src([`./${devFolder}/02-components.css`, `./${devFolder}/03-plugins.css`])
         .pipe(concat('addons_styles.css'))
         .pipe(autoprefixer())
         .pipe(cleanCSS())
-        .pipe(gulp.dest('./generator/bundle/'));
+        .pipe(gulp.dest(`./${generatorFolder}/bundle/`));
 });
 
 // Generación de la hoja de estilos maestra
 gulp.task('generate_master_stylesheet', () => {
-    return gulp.src(['./generator/bundle/framework_purge.css', './generator/bundle/addons_styles.css'])
+    return gulp.src([`./${generatorFolder}/bundle/framework_purge.css`, `./${generatorFolder}/bundle/addons_styles.css`])
         .pipe(concat(cssFilename))
         .pipe(autoprefixer())
         .pipe(cleanCSS())
-        .pipe(gulp.dest('./public/'));
+        .pipe(gulp.dest(`./${distFolder}/`));
 });
 
 // Generación de la hoja de scripts maestra
 gulp.task('generate_master_scripts', () => {
-    return gulp.src('./generator/bundle/*.js')
+    return gulp.src(`./${generatorFolder}/bundle/*.js`)
         .pipe(concat(jsFilename))
         .pipe(uglify())
-        .pipe(gulp.dest('./public/'))
+        .pipe(gulp.dest(`./${distFolder}/`))
 });
 
 // Inyección de los archivos maestros
 gulp.task('inject_master_files', () => {
-    return gulp.src('./public/**/*.html')
-        .pipe(inject(gulp.src(['./public/**/*.js', './public/**/*.css'], { read: false }), { relative: true }))
-        .pipe(gulp.dest('./public/'))
+    return gulp.src(`./${distFolder}/**/*.html`)
+        .pipe(inject(gulp.src([`./${distFolder}/**/*.js`, `./${distFolder}/**/*.css`], { read: false }), { relative: true }))
+        .pipe(gulp.dest(`./${distFolder}/`))
 });
 
 // Generación de CSS Critico
 gulp.task('generate_critical', () => {
     return gulp
-        .src('./public/**/*.html')
+        .src(`./${distFolder}/**/*.html`)
         .pipe(critical({
-            base: 'public/',
+            base: `${distFolder}/`,
             inline: true,
             css: [
-                'public/landstorm-cdn-stylesheet.css'
+                `${distFolder}/landstorm-cdn-stylesheet.css`
             ]
         }))
-        .pipe(gulp.dest('./public/'));
+        .pipe(gulp.dest(`./${distFolder}/`));
 });
 
 // Minificación de los archivos html
 gulp.task('minify_html', () => {
-    return gulp.src('./public/**/*.html')
+    return gulp.src(`./${distFolder}/**/*.html`)
         .pipe(htmlmin({ collapseWhitespace: true }))
-        .pipe(gulp.dest('./public/'));
+        .pipe(gulp.dest(`./${distFolder}/`));
 });
 
 gulp.task('build_web', gulp.series(['prepare_html', 'prepare_framework', 'prepare_js_files', 'prepare_addons', 'generate_master_stylesheet', 'generate_master_scripts', 'inject_master_files', 'generate_critical', 'minify_html']))
@@ -382,45 +383,45 @@ gulp.task('build_web', gulp.series(['prepare_html', 'prepare_framework', 'prepar
 //-----------------------------------------------------------------------
 // Manejo de las fuentes web
 gulp.task('prepare_fonts', () => {
-    return gulp.src('./review/*.{ttf,woff,woff2}')
-        .pipe(gulp.dest('./public/'))
+    return gulp.src(`./${devFolder}/*.{ttf,woff,woff2}`)
+        .pipe(gulp.dest(`./${distFolder}/`))
 });
 
 // Manejo del favicon
 gulp.task('prepare_favicon', () => {
-    return gulp.src('./review/favicons/**')
-        .pipe(gulp.dest('./public/favicons/'))
+    return gulp.src(`./${devFolder}/${faviconsFolder}/**`)
+        .pipe(gulp.dest(`./${distFolder}/${faviconsFolder}/`))
 });
 
 gulp.task('prepare_images', () => {
-    return gulp.src('./review/images/**')
-        .pipe(gulp.dest('./public/images/'))
+    return gulp.src(`./${devFolder}/${imagesFolder}/**`)
+        .pipe(gulp.dest(`./${distFolder}/${imagesFolder}/`))
 });
 
 gulp.task('prepare_video', () => {
-    return gulp.src('./review/videos/**')
-        .pipe(gulp.dest('./public/videos/'))
+    return gulp.src(`./${devFolder}/${videosFolder}/**`)
+        .pipe(gulp.dest(`./${distFolder}/${videosFolder}/`))
 });
 
 gulp.task('build_assets', gulp.series(['prepare_fonts', 'prepare_favicon', 'prepare_images', 'prepare_video']))
 
 // Creación de sitemap
 gulp.task('sitemap', () => {
-    return gulp.src('./public/**/*.html')
+    return gulp.src(`./${distFolder}/**/*.html`)
         .pipe(sitemap({
             siteUrl: sitemapUrl,
             changefreq: sitemapFrequence,
             priority: sitemapPriority,
             images: true
         }))
-        .pipe(gulp.dest('./public/'));
+        .pipe(gulp.dest(`./${distFolder}/`));
 });
 
 // Crear un zip
 gulp.task('zip', () => {
-    return gulp.src('./public/**')
-        .pipe(zip('cpanel.zip'))
-        .pipe(gulp.dest('./packages/'))
+    return gulp.src(`./${distFolder}/**`)
+        .pipe(zip(`${zipFilename}`))
+        .pipe(gulp.dest(`./${zipFolder}/`))
 })
 
 // Empaquetar todo para subirlo a producción :)
