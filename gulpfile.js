@@ -70,6 +70,7 @@ const critical     =  require('critical').stream;
 const purgecss     =  require('gulp-purgecss');
 const inject       =  require('gulp-inject');
 const htmlmin      =  require('gulp-htmlmin');
+const browserSync  =  require('browser-sync').create();
 
 // --------------------------------------------------------------------------------------------
 // ----- Configuración para Desarrollo --------------------------------------------------------
@@ -113,6 +114,7 @@ gulp.task('import_framework_styles', () => {
         .pipe(autoprefixer())
         .pipe(concat('01-framework.css'))
         .pipe(gulp.dest(`./${devFolder}/`))
+        .pipe(browserSync.stream());
 });
 
 // Minificación y concatenación de JS del Framework
@@ -121,6 +123,7 @@ gulp.task('import_framework_scripts', () => {
         .pipe(concat('01-framework.js'))
         .pipe(uglify())
         .pipe(gulp.dest(`./${devFolder}/`))
+        .pipe(browserSync.stream());
 });
 
 // Importar el Framework a la carpeta review
@@ -173,6 +176,7 @@ gulp.task('generate_component_styles', () => {
         .pipe(autoprefixer())
         .pipe(concat('02-components.css'))
         .pipe(gulp.dest(`./${devFolder}/`))
+        .pipe(browserSync.stream());
 });
 
 // Generación de los scripts de los plugins
@@ -181,6 +185,7 @@ gulp.task('generate_component_scripts', () => {
         .pipe(concat('02-components.js'))
         .pipe(uglify())
         .pipe(gulp.dest(`./${devFolder}/`))
+        .pipe(browserSync.stream());
 });
 
 gulp.task('setup_components', gulp.series(['import_components', 'generate_component_styles', 'generate_component_scripts']));
@@ -194,6 +199,7 @@ gulp.task('compile_pug', () => {
     return gulp.src(`./${srcFolder}/${coreFolder}/${pagesFolder}/**/*.pug`)
         .pipe(pug({ pretty: true }))
         .pipe(gulp.dest(`./${devFolder}/`))
+        .pipe(browserSync.stream());
 });
 
 // Inyección de CDNs
@@ -260,10 +266,20 @@ gulp.task('setup_assets', gulp.series(['font', 'favicon', 'img', 'img_webp', 'vi
 gulp.task('start', gulp.series(['setup_review', 'setup_generator', 'setup_framework', 'setup_components', 'setup_plugins', 'setup_pages', 'setup_assets']));
 
 
-// Configuración del Watch
-gulp.task('watch', () => {
-    gulp.watch([`./${srcFolder}/${coreFolder}/**/*.pug`, `./${srcFolder}/${coreFolder}/**/*.scss`, `./${srcFolder}/${coreFolder}/**/*.js`], gulp.series(['compile_pug', 'setup_framework', 'setup_components', 'inject_scripts']));
+// Servidor con Browsersync
+gulp.task('server', () => {
+
+    browserSync.init({
+        server: `./${devFolder}/`
+    });
+
+    gulp.watch(`./${srcFolder}/${coreFolder}/${frameworkFolder}/**/*.scss`, gulp.parallel(['import_framework_styles']));
+    gulp.watch(`./${srcFolder}/${coreFolder}/${frameworkFolder}/**/*.js`, gulp.parallel(['import_framework_scripts']));
+    gulp.watch(`./${srcFolder}/${coreFolder}/${componentsFolder}/**/*.scss`, gulp.series(['import_components', 'generate_component_styles']));
+    gulp.watch(`./${srcFolder}/${coreFolder}/${componentsFolder}/**/*.js`, gulp.series(['import_components', 'generate_component_scripts']));
+    gulp.watch(`./${srcFolder}/**/*.pug`, gulp.parallel(['setup_pages']));
 });
+
 
 // --------------------------------------------------------------------------------------------
 // ----- Configuración para Producción --------------------------------------------------------
