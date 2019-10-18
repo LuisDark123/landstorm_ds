@@ -1,1 +1,1 @@
-console.log('El script del componente Videoplayer Vanilla esta funcionando :)')
+console.log('El componente a cambiado correctamente :)')

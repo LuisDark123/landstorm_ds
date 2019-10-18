@@ -1,1 +1,1 @@
-console.log('Sitio creado con ⚡ Landstorm Developer System')
+console.log('⚡ Powered by Landstorm Developer System')

@@ -33,7 +33,6 @@ const pluginsExtension = `/*.{js,css}`;
 
 const plugins = [
     `${pluginsRute}blazy${pluginsExtension}`,
-    `${pluginsRute}plyr${pluginsExtension}`,
 ];
 
 // Configuración de los Componentes que se utilizaran en el proyecto
@@ -261,8 +260,10 @@ gulp.task('setup_assets', gulp.series(['font', 'favicon', 'img', 'img_webp', 'vi
 gulp.task('start', gulp.series(['setup_review', 'setup_generator', 'setup_framework', 'setup_components', 'setup_plugins', 'setup_pages', 'setup_assets']));
 
 
-
-
+// Configuración del Watch
+gulp.task('watch', () => {
+    gulp.watch([`./${srcFolder}/${coreFolder}/**/*.pug`, `./${srcFolder}/${coreFolder}/**/*.scss`, `./${srcFolder}/${coreFolder}/**/*.js`], gulp.series(['compile_pug', 'setup_framework', 'setup_components', 'inject_scripts']));
+});
 
 // --------------------------------------------------------------------------------------------
 // ----- Configuración para Producción --------------------------------------------------------
@@ -326,7 +327,7 @@ gulp.task('prepare_js_files', () => {
 
 // Importar los estilos de los componentes y los plugins
 gulp.task('prepare_addons', () => {
-    return gulp.src([`./${devFolder}/02-components.css`, `./${devFolder}/03-plugins.css`])
+    return gulp.src([`./${devFolder}/*.css`, `!./${devFolder}/01-framework.css`])
         .pipe(concat('addons_styles.css'))
         .pipe(autoprefixer())
         .pipe(cleanCSS())
@@ -365,7 +366,7 @@ gulp.task('generate_critical', () => {
             base: `${distFolder}/`,
             inline: true,
             css: [
-                `${distFolder}/landstorm-cdn-stylesheet.css`
+                `${distFolder}/${cssFilename}`
             ]
         }))
         .pipe(gulp.dest(`./${distFolder}/`));
@@ -426,8 +427,3 @@ gulp.task('zip', () => {
 
 // Empaquetar todo para subirlo a producción :)
 gulp.task('build', gulp.series(['build_public', 'build_bundle', 'build_web', 'build_assets', 'sitemap', 'zip',]));
-
-// Configuración del Watch
-gulp.task('watch', () => {
-    gulp.watch(['./src/pages/**/*.pug', './src/javascripts/**/*.js', './src/sass/**/*.scss'], gulp.series(['inject_scripts']));
-});
