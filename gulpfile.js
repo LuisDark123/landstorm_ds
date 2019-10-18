@@ -2,6 +2,24 @@
 // ----- Configuración del Usuario ------------------------------------------------------------
 // --------------------------------------------------------------------------------------------
 
+// Folders 
+const srcFolder = 'src';
+const devFolder = 'review';
+const distFolder = 'public';
+const coreFolder = 'core';
+const pluginsFolder = 'plugins';
+const componentsFolder = 'components';
+const generatorFolder = 'generator';
+const frameworkFolder = 'framework';
+const frameworkStylesFolder = 'styles';
+const frameworkScriptsFolder = 'scripts';
+const frameworkStylesCore = 'core.scss';
+const pagesFolder = "pages";
+const fontsFolder = "fonts";
+const faviconsFolder = "favicons";
+const imagesFolder = "images";
+const videosFolder = "videos";
+
 // Configuración del Sitemap
 const sitemapUrl = 'https://landstorm.dev';
 const sitemapFrequence = 'monthly'; // 'always', 'hourly', 'daily', 'weekly', 'monthly', 'yearly', 'never'
@@ -14,18 +32,22 @@ const cssFilename = 'landstorm-cdn-stylesheet.css'; // Nombre del archivo maestr
 
 
 // Configuración de los Plugins que se utilizaran en el proyecto
+const pluginsRute = `./${srcFolder}/${coreFolder}/${pluginsFolder}/`;
+const pluginsExtension = `/*.{js,css}`;
+
 const plugins = [
-    './src/core/plugins/blazy/*.{js,css}',
-    './src/core/plugins/plyr/*.{js,css}',
+    `${pluginsRute}blazy${pluginsExtension}`,
+    `${pluginsRute}plyr${pluginsExtension}`,
 ];
+
 
 // Configuración de los Componentes que se utilizaran en el proyecto
+const componentsRute = `./${srcFolder}/${coreFolder}/${componentsFolder}/`;
+const componentsExtension = `/*.{js,scss}`;
+
 const components = [
-    './src/core/components/videoplayers/videoplayer_vanilla/*.{js,scss}'
+    `${componentsRute}videoplayers/videoplayer_vanilla${componentsExtension}`,
 ];
-
-// Folders 
-
 
 // --------------------------------------------------------------------------------------------
 // ----- Modulos Gulp -------------------------------------------------------------------------
@@ -56,13 +78,13 @@ const htmlmin      =  require('gulp-htmlmin');
 
 // Crear el directorio review
 gulp.task('create_review', () => {
-    return gulp.src('./src/')
-        .pipe(gulp.dest('./review/'))
+    return gulp.src(`./${srcFolder}/`)
+        .pipe(gulp.dest(`./${devFolder}/`))
 });
 
 // Limpiar la carpeta review
 gulp.task('clean_review', () => {
-    return gulp.src('./review/*')
+    return gulp.src(`./${devFolder}/*`)
         .pipe(clean())
 });
 
@@ -70,13 +92,13 @@ gulp.task('setup_review', gulp.series(['create_review', 'clean_review']));
 
 // Crear el directorio generator
 gulp.task('create_generator', () => {
-    return gulp.src('./src/')
-        .pipe(gulp.dest('./generator/'))
+    return gulp.src(`./${srcFolder}/`)
+        .pipe(gulp.dest(`./${generatorFolder}/`))
 });
 
 // Limpiar la carpeta generator
 gulp.task('clean_generator', () => {
-    return gulp.src('./generator/*')
+    return gulp.src(`./${generatorFolder}/*`)
         .pipe(clean())
 });
 
@@ -86,19 +108,19 @@ gulp.task('setup_generator', gulp.series(['create_generator', 'clean_generator']
 // --------------------------------------------------------------------------
 // Compilación de SASS y conversion a CSS del Framework
 gulp.task('import_framework_styles', () => {
-    return gulp.src('./src/core/framework/styles/core.scss')
+    return gulp.src(`./${srcFolder}/${coreFolder}/${frameworkFolder}/${frameworkStylesFolder}/${frameworkStylesCore}`)
         .pipe(sass())
         .pipe(autoprefixer())
         .pipe(concat('01-framework.css'))
-        .pipe(gulp.dest('./review/'))
+        .pipe(gulp.dest(`./${devFolder}/`))
 });
 
 // Minificación y concatenación de JS del Framework
 gulp.task('import_framework_scripts', () => {
-    return gulp.src('./src/core/framework/scripts/**/*.js')
+    return gulp.src(`./${srcFolder}/${coreFolder}/${frameworkFolder}/${frameworkScriptsFolder}/**/*.js`)
         .pipe(concat('01-framework.js'))
         .pipe(uglify())
-        .pipe(gulp.dest('./review/'))
+        .pipe(gulp.dest(`./${devFolder}/`))
 });
 
 // Importar el Framework a la carpeta review
@@ -111,24 +133,24 @@ gulp.task('setup_framework', gulp.series(['import_framework_styles', 'import_fra
 // Importación de los Plugins
 gulp.task('import_plugins', () => {
     return gulp.src(plugins)
-        .pipe(gulp.dest('./generator/plugins-pack/'))
+        .pipe(gulp.dest(`./${generatorFolder}/plugins-pack/`))
 });
 
 // Generación de la hoja de estilos de los plugins
 gulp.task('generate_plugin_styles', () => {
-    return gulp.src('./generator/plugins-pack/*.css')
+    return gulp.src(`./${generatorFolder}/plugins-pack/*.css`)
         .pipe(sass())
         .pipe(autoprefixer())
         .pipe(concat('03-plugins.css'))
-        .pipe(gulp.dest('./review/'))
+        .pipe(gulp.dest(`./${devFolder}/`))
 });
 
 // Generación de los scripts de los plugins
 gulp.task('generate_plugin_scripts', () => {
-    return gulp.src('./generator/plugins-pack/*.js')
+    return gulp.src(`./${generatorFolder}/plugins-pack/*.js`)
         .pipe(concat('03-plugins.js'))
         .pipe(uglify())
-        .pipe(gulp.dest('./review/'))
+        .pipe(gulp.dest(`./${devFolder}/`))
 });
 
 // Generación e importación de los plugins
@@ -141,24 +163,24 @@ gulp.task('setup_plugins', gulp.series(['import_plugins', 'generate_plugin_style
 // Importación de los componentes seleccionados
 gulp.task('import_components', () => {
     return gulp.src(components)
-        .pipe(gulp.dest('./generator/components-pack/'))
+        .pipe(gulp.dest(`./${generatorFolder}/components-pack/`))
 });
 
 // Generación de la hoja de estilos de los plugins
 gulp.task('generate_component_styles', () => {
-    return gulp.src('./generator/components-pack/*.scss')
+    return gulp.src(`./${generatorFolder}/components-pack/*.scss`)
         .pipe(sass())
         .pipe(autoprefixer())
         .pipe(concat('02-components.css'))
-        .pipe(gulp.dest('./review/'))
+        .pipe(gulp.dest(`./${devFolder}/`))
 });
 
 // Generación de los scripts de los plugins
 gulp.task('generate_component_scripts', () => {
-    return gulp.src('./generator/components-pack/*.js')
+    return gulp.src(`./${generatorFolder}/components-pack/*.js`)
         .pipe(concat('02-components.js'))
         .pipe(uglify())
-        .pipe(gulp.dest('./review/'))
+        .pipe(gulp.dest(`./${devFolder}/`))
 });
 
 gulp.task('setup_components', gulp.series(['import_components', 'generate_component_styles', 'generate_component_scripts']));
@@ -169,16 +191,16 @@ gulp.task('setup_components', gulp.series(['import_components', 'generate_compon
 //-----------------------------------------------------------------
 // Compilación de Pug a Html
 gulp.task('compile_pug', () => {
-    return gulp.src('./src/core/pages/**/*.pug')
+    return gulp.src(`./${srcFolder}/${coreFolder}/${pagesFolder}/**/*.pug`)
         .pipe(pug({ pretty: true }))
-        .pipe(gulp.dest('./review/'))
+        .pipe(gulp.dest(`./${devFolder}/`))
 });
 
 // Inyección de CDNs
 gulp.task('inject_scripts', () => {
-    return gulp.src('./review/**/*.html')
-        .pipe(inject(gulp.src(['./review/**/*.js', './review/**/*.css'], { read: false }), { relative: true }))
-        .pipe(gulp.dest('./review'))
+    return gulp.src(`./${devFolder}/**/*.html`)
+        .pipe(inject(gulp.src([`./${devFolder}/**/*.js`, `./${devFolder}/**/*.css`], { read: false }), { relative: true }))
+        .pipe(gulp.dest(`./${devFolder}`))
 });
 
 gulp.task('setup_pages', gulp.series(['compile_pug', 'inject_scripts']));
@@ -189,19 +211,19 @@ gulp.task('setup_pages', gulp.series(['compile_pug', 'inject_scripts']));
 //-----------------------------------------------------------------------
 // Manejo de las fuentes web
 gulp.task('font', () => {
-    return gulp.src('./src/fonts/**')
-        .pipe(gulp.dest('./review/'))
+    return gulp.src(`./${srcFolder}/${fontsFolder}/**`)
+        .pipe(gulp.dest(`./${devFolder}/`))
 });
 
 // Manejo del favicon
 gulp.task('favicon', () => {
-    return gulp.src('./src/favicons/**')
-        .pipe(gulp.dest('./review/favicons/'))
+    return gulp.src(`./${srcFolder}/${faviconsFolder}/**`)
+        .pipe(gulp.dest(`./${devFolder}/${faviconsFolder}/`))
 });
 
 // Minificado de las imagenes jpg y png
 gulp.task('img', () => {
-    return gulp.src('./src/images/*')
+    return gulp.src(`./${srcFolder}/${imagesFolder}/*`)
         .pipe(imagemin([
             imagemin.gifsicle({ interlaced: true }),
             imagemin.jpegtran({ progressive: true }),
@@ -213,23 +235,23 @@ gulp.task('img', () => {
                 ]
             })
         ]))
-        .pipe(gulp.dest('./review/images/'))
+        .pipe(gulp.dest(`./${devFolder}/${imagesFolder}/`))
 });
 
 // Conversión de imagenes webp
 gulp.task('img_webp', () => {
-    return gulp.src(['./src/images/**/*.{png,jpg,jpeg}'])
+    return gulp.src([`./${srcFolder}/${imagesFolder}/**/*.{png,jpg,jpeg}`])
         .pipe(imagemin([
             webp({ quality: 100 })
         ]))
         .pipe(extReplace('.webp'))
-        .pipe(gulp.dest('./review/images/'))
+        .pipe(gulp.dest(`./${devFolder}/${imagesFolder}/`))
 })
 
 // Manejo de los Videos locales
 gulp.task('video', () => {
-    return gulp.src('./src/videos/**')
-        .pipe(gulp.dest('./review/videos/'))
+    return gulp.src(`./${srcFolder}/${videosFolder}/**`)
+        .pipe(gulp.dest(`./${devFolder}/${videosFolder}/`))
 });
 
 gulp.task('setup_assets', gulp.series(['font', 'favicon', 'img', 'img_webp', 'video']));
