@@ -38,3 +38,19 @@ block BODY
       div(class="row")
         div(class="col-8 move-col-2")
           include ../components/videoplayers/videoplayer_vanilla/videoplayer_vanilla_01
+
+block JSON-LD
+    script(type='application/ld+json').
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "url": "http://www.example.com",
+          "name": "Company Example.",
+          "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+1-401-555-1212",
+          "contactType": "Customer service"
+          }
+        }
+      ]

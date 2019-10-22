@@ -5,18 +5,20 @@
 // Folders 
 const srcFolder = 'src';
 const devFolder = 'review';
-const distFolder = 'public';
 const coreFolder = 'core';
+const distFolder = 'public';
+const fontsFolder = 'fonts';
+const pagesFolder = 'pages';
 const pluginsFolder = 'plugins';
-const componentsFolder = 'components';
-const generatorFolder = 'generator';
+const faviconsFolder = 'favicons';
 const frameworkFolder = 'framework';
+const generatorFolder = 'generator';
+const componentsFolder = 'components';
+const frameworkStylesCore = 'core.scss';
 const frameworkStylesFolder = 'styles';
 const frameworkScriptsFolder = 'scripts';
-const frameworkStylesCore = 'core.scss';
-const pagesFolder = 'pages';
-const fontsFolder = 'fonts';
-const faviconsFolder = 'favicons';
+
+
 const imagesFolder = 'images';
 const videosFolder = 'videos';
 const zipFolder = 'packages';
@@ -263,7 +265,7 @@ gulp.task('video', () => {
 gulp.task('setup_assets', gulp.series(['font', 'favicon', 'img', 'img_webp', 'video']));
 
 
-gulp.task('start', gulp.series(['setup_review', 'setup_generator', 'setup_framework', 'setup_components', 'setup_plugins', 'setup_pages', 'setup_assets']));
+gulp.task('dev', gulp.series(['setup_review', 'setup_generator', 'setup_framework', 'setup_components', 'setup_plugins', 'setup_pages', 'setup_assets']));
 
 
 // Servidor con Browsersync
