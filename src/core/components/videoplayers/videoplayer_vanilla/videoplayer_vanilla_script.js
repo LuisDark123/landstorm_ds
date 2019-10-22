@@ -1,1 +1,0 @@
-console.log('El componente a cambiado correctamente :v')

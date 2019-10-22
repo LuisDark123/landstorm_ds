@@ -42,7 +42,7 @@ const componentsRute = `./${srcFolder}/${coreFolder}/${componentsFolder}/`;
 const componentsExtension = `/*.{js,scss}`;
 
 const components = [
-    `${componentsRute}videoplayers/videoplayer_vanilla${componentsExtension}`,
+    `${componentsRute}headers/header_welcome${componentsExtension}`,
 ];
 
 // Configuración del Sitemap
