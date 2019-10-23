@@ -28,11 +28,6 @@ $column_unit: $full_width / $column_end;
     flex-direction: column;
 }
 
-.container img, .container-full img{
-    width: 100%;
-    object-fit: cover;
-}
-
 .container video, .container-full video{
     width: 100%;
     object-fit: cover;
