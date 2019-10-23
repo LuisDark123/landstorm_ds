@@ -45,7 +45,7 @@ $column_unit: $full_width / $column_end;
 }
 
 .row{
-    display: block;
+    display: flex;
     padding: $row_padding;
     margin: 0;
 }
