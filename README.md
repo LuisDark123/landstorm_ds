@@ -9,7 +9,7 @@ Esta construido con Gulp mediante tareas para realizar la construcción del siti
 
 ```bash
 npm install -g gulp
-npm install --save-dev gulp-cli gulp-watch gulp-util gulp-inject gulp-concat gulp-clean gulp-ext-replace gulp-zip gulp-htmlmin gulp-pug gulp-sass gulp-clean-css gulp-purgecss gulp-autoprefixer gulp-uglify gulp-imagemin gulp-sitemap critical node-sass browser-sync imagemin-webp
+npm install --save-dev gulp-cli gulp-watch gulp-inject gulp-concat gulp-clean gulp-ext-replace gulp-zip gulp-htmlmin gulp-pug gulp-sass gulp-clean-css gulp-purgecss gulp-autoprefixer gulp-uglify gulp-imagemin gulp-sitemap critical node-sass browser-sync imagemin-webp
 ```
 
 ## Lista de comandos
