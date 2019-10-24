@@ -1,11 +1,9 @@
-// Brand Colors
-$color_brand_yellow: #FCE800;
-$color_brand_dark: #1A1A1A;
-$color_brand_blue: #2280E6;
-
-// Document Colors
-$color_white:      #FFFAFA;
-$color_whitesmoke: #F5F5F5;
+// Principal Colors
+$color_primary: #F0FFFF;
+$color_secondary: #F5FFFA;
+$color_gray: #dedddd;
+$color_white: #fffafa;
+$color_black: #1d2125;
 
 
 // Focus Colors
@@ -37,37 +35,9 @@ $color_teal:       #008080;
 
 
 // Gray Scale Colors
-$color_gray_dark: #C1C1C1;
+$color_gray_dark: #c1c1c1;
 $color_gray: #A9A9A9;
 $color_gray_light: #F1F1F1;
 
 // Shadows Colors
 $color_shadow: rgba(0,0,0,.22);
-
-.focus-whitesmoke{ 
-    background-color: $color_whitesmoke; 
-}
-
-.focus-azure{ 
-    background-color: $color_focus_azure; 
-}
-
-.focus-alice{ 
-    background-color: $color_focus_alice; 
-}
-
-.focus-antique{ 
-    background-color: $color_focus_antique; 
-}
-
-.focus-honey{ 
-    background-color: $color_focus_honey; 
-}
-
-.focus-beige{ 
-    background-color: $color_focus_beige; 
-}
-
-.focus-mint{ 
-    background-color: $color_focus_mint; 
-}

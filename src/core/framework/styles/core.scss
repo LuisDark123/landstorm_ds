@@ -25,12 +25,19 @@
 
 
 // -------------------------------------------------------------------
+// --- Base styles ---------------------------------------------------
+// -------------------------------------------------------------------
+
+@import "./tokens/_colors.scss"; // Asignador
+
+
+
+// -------------------------------------------------------------------
 // --- Library styles ----------------------------------------------
 // -------------------------------------------------------------------
 
 @import "./library/_querys.scss"; // Asignador Crítico
 @import "./library/_titles.scss"; // Modificador Crítico
-@import "./library/_colors.scss"; // Asignador
 @import "./library/_sections.scss"; // Estilizador
 @import "./library/_flexbox.scss"; // Estilizador
 @import "./library/_paragraphs.scss"; // Estilizador
