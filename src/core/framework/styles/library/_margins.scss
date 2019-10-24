@@ -7,11 +7,6 @@
 //                   /____/                
 
 
-$margin_start:  1;
-$margin_end:    6;
-$margin_unit: 5px;
-
-
 // Margin General
 @for $i from $margin_start through $margin_end {
     .m-#{$i} {
