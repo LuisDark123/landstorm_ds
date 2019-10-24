@@ -5,43 +5,44 @@
 // \____/\____/_/   \___(_)____/\___/____/____/  
 // 
 
-// Estilizador -> El archivo asigna estilos a un elemento determinado
-// Modificador -> El archivo modifica los estilos asignados por otro archivo. Este tipo de archivo debe cargarse al final de la cola de carga
-// Asignador   -> El archivo contiene variables que serán usadas por otros archivos. Por lo tanto debe cargarse antes de los archivos vinculados.
-// Crítico     -> El archivo asigna estilos pero debe ser cargado al principio de la cola de carga
+
+// -------------------------------------------------------------------
+// --- Tokens --------------------------------------------------------
+// -------------------------------------------------------------------
+@import "./tokens/_vars.scss";
+@import "./tokens/_colors.scss";
+
 
 // -------------------------------------------------------------------
 // --- Base styles ---------------------------------------------------
 // -------------------------------------------------------------------
-
-@import "./base/_body.scss"; // Estilizador
-@import "./base/_fonts.scss"; // Estilizador
-@import "./base/_images.scss"; // Estilizador
-@import "./base/_links.scss"; // Estilizador
-@import "./base/_paragraphs.scss"; // Estilizador
-@import "./base/_sections.scss"; // Estilizador
-@import "./base/_titles.scss"; // Estilizador
-
+@import "./base/_body.scss"; 
+@import "./base/_fonts.scss"; 
+@import "./base/_images.scss"; 
+@import "./base/_links.scss"; 
+@import "./base/_paragraphs.scss"; 
+@import "./base/_sections.scss"; 
+@import "./base/_titles.scss"; 
 
 
 // -------------------------------------------------------------------
 // --- Library styles ----------------------------------------------
 // -------------------------------------------------------------------
-
-@import "./library/_querys.scss"; // Asignador Crítico
-@import "./library/_titles.scss"; // Modificador Crítico
-@import "./library/_colors.scss"; // Asignador
-@import "./library/_sections.scss"; // Estilizador
-@import "./library/_flexbox.scss"; // Estilizador
-@import "./library/_paragraphs.scss"; // Estilizador
-@import "./library/_columns.scss"; // Estilizador
-@import "./library/_margins.scss"; // Modificador
-@import "./library/_paddings.scss"; // Modificador
+@import "./library/_querys.scss";
+@import "./library/_titles.scss"; 
+@import "./library/_sections.scss"; 
+@import "./library/_flexbox.scss"; 
+@import "./library/_paragraphs.scss"; 
+@import "./library/_shadows.scss";
+@import "./library/_z-index.scss"; 
+@import "./library/_columns.scss"; 
+@import "./library/_margins.scss";
+@import "./library/_paddings.scss";
 
 
 
 // -------------------------------------------------------------------
 // --- DOM styles ----------------------------------------------------
 // -------------------------------------------------------------------
-
-@import "./dom/scrollbar.scss"; // Estilizador Crítico
+@import "./browser/_scrollbar.scss";
+@import "./browser/_selection-text.scss";

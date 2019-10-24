@@ -1,0 +1,48 @@
+// -------------------------------------------------------
+// ----- Variables para el sistema de columnas -----------
+// -------------------------------------------------------
+$full_width:        100%;
+$column_start:         1;
+$column_end:          12;
+$col_padding:         0;
+$row_padding:         4%;
+$margin_left:      8.33%;
+$column_unit: $full_width / $column_end;
+
+
+// -------------------------------------------------------
+// ----- Variables para asignar valores al Margin --------
+// -------------------------------------------------------
+$margin_start:  1;
+$margin_end:    6;
+$margin_unit: 5px;
+
+
+
+// -------------------------------------------------------
+// ----- Variables para asignar valores al Padding -------
+// -------------------------------------------------------
+$padding_start:  1;
+$padding_end:    6;
+$padding_unit: 5px;
+
+
+
+// -------------------------------------------------------
+// ----- Variables para el espaciado de Sections ---------
+// -------------------------------------------------------
+$unit_spacing: 30px;
+$one_unit_spacing: $unit_spacing;
+$two_unit_spacing: $unit_spacing * 2;
+$three_unit_spacing: $unit_spacing * 3;
+$four_unit_spacing: $unit_spacing * 4;
+
+
+
+// -------------------------------------------------------
+// ----- Variables para Media Querys ---------------------
+// -------------------------------------------------------
+$xl: only screen and (min-width : 1024px);
+$lg: only screen and (max-width : 1023px);
+$md: only screen and (max-width : 750px);
+$sm: only screen and (max-width : 480px);

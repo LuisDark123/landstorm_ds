@@ -7,11 +7,6 @@
 //                   /____/                
 
 
-$margin_start:  1;
-$margin_end:    6;
-$margin_unit: 5px;
-
-
 // Margin General
 @for $i from $margin_start through $margin_end {
     .m-#{$i} {
@@ -65,4 +60,24 @@ $margin_unit: 5px;
 
 .ml-0{ 
     margin-left: 0; 
+}
+
+.m-auto{
+    margin: auto;
+}
+
+.mt-auto{
+    margin-top: auto;
+}
+
+.mr-auto{
+    margin-right: auto;
+}
+
+.mb-auto{
+    margin-bottom: auto;
+}
+
+.ml-auto{
+    margin-left: auto;
 }

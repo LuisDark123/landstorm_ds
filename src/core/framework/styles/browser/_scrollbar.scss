@@ -10,9 +10,9 @@
     width: 8px;
 }
 ::-webkit-scrollbar-track {
-	background: $color_gray_light;
+	background: $color_browser_primary;
 }
 ::-webkit-scrollbar-thumb {
-    background: $color_gray_dark;
+    background: $color_browser_secondary;
     border-radius: 20px;
 }
