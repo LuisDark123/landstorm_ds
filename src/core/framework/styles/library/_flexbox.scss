@@ -6,7 +6,7 @@
 // /_/   /_/\___/_/|_/_.___/\____/_/|_|  
                                       
 
-.flex{ 
+.d-flex{ 
     display: flex; 
 }
 
@@ -22,7 +22,15 @@
     flex-direction: column; 
 }
 
+.flex-column-reverse{ 
+    flex-direction: column; 
+}
+
 .flex-row{ 
+    flex-direction: row; 
+}
+
+.flex-row-reverse{ 
     flex-direction: row; 
 }
 
