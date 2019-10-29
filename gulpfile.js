@@ -11,7 +11,6 @@ const autoprefixer = require('gulp-autoprefixer');
 const pug = require('gulp-pug');
 const sitemap = require('gulp-sitemap');
 const clean = require('gulp-clean');
-const zip = require('gulp-zip');
 const imagemin = require('gulp-imagemin');
 const extReplace = require('gulp-ext-replace');
 const webp = require('imagemin-webp');
