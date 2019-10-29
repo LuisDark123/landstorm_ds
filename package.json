@@ -1,0 +1,48 @@
+{
+  "name": "landstorm_developer_system",
+  "version": "1.3.0",
+  "description": "Es un sistema gratuito para desarrolladores web que genera un entorno de desarrollo específicamente para sitios web estáticos construidos a partir de componentes en pug, librerías javascript y el framework css nativo de landstorm.",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "browser-sync": "^2.26.7",
+    "critical": "^1.3.6",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^7.0.1",
+    "gulp-clean": "^0.4.0",
+    "gulp-clean-css": "^4.2.0",
+    "gulp-cli": "^2.2.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-ext-replace": "^0.3.0",
+    "gulp-htmlmin": "^5.0.1",
+    "gulp-imagemin": "^6.1.1",
+    "gulp-inject": "^5.0.4",
+    "gulp-pug": "^4.0.1",
+    "gulp-purgecss": "^1.2.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-sitemap": "^7.5.0",
+    "gulp-uglify": "^3.0.2",
+    "gulp-watch": "^5.0.1",
+    "imagemin-webp": "^5.1.0",
+    "node-sass": "^4.12.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LuisDark123/Landstorm_Developer_System.git"
+  },
+  "keywords": [
+    "gulp",
+    "sass",
+    "pug",
+    "framework"
+  ],
+  "author": "luisdark935@gmail.com   @luisdark123",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/LuisDark123/Landstorm_Developer_System/issues"
+  },
+  "homepage": "https://github.com/LuisDark123/Landstorm_Developer_System#readme"
+}
