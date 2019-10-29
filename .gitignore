@@ -1,9 +1,6 @@
 node_modules
-public
-generator
-packages
-review
-design
-tools
 package.json
 package-lock.json
+generator
+dist
+public
