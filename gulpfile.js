@@ -19,10 +19,14 @@ const purgecss = require('gulp-purgecss');
 const inject = require('gulp-inject');
 const htmlmin = require('gulp-htmlmin');
 const browserSync = require('browser-sync').create();
+const { src, task } = require('gulp');
+const ghPages = require('gulp-gh-pages');
 
 
-
-
+gulp.task('deploy', () => {
+    return gulp.src('./dist/**/*')
+        .pipe(ghPages());
+})
 
 
 // --------------------------------------------------------------------------------------------
