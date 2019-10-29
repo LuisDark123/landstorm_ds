@@ -12,9 +12,9 @@ npm install --save-dev gulp gulp-cli gulp-watch gulp-inject gulp-concat gulp-cle
 ```
 
 ## Subir el proyecto a producción en Github Pages
-´´´bash
+```bash
 git subtree push --prefix dist origin gh-pages
-´´´
+```
 
 ## Lista de comandos
 ### gulp dev
