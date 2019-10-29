@@ -19,13 +19,7 @@ const purgecss = require('gulp-purgecss');
 const inject = require('gulp-inject');
 const htmlmin = require('gulp-htmlmin');
 const browserSync = require('browser-sync').create();
-var deploy = require('gulp-gh-pages');
 
-
-gulp.task('deploy', function () {
-    return gulp.src("./dist/**/*")
-        .pipe(deploy())
-});
 
 // --------------------------------------------------------------------------------------------
 // ----- Configuración del Usuario ------------------------------------------------------------
