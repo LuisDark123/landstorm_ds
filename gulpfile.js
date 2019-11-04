@@ -14,6 +14,7 @@ const clean = require('gulp-clean');
 const imagemin = require('gulp-imagemin');
 const extReplace = require('gulp-ext-replace');
 const webp = require('imagemin-webp');
+const postcss = require('gulp-postcss')
 const critical = require('critical').stream;
 const purgecss = require('gulp-purgecss');
 const inject = require('gulp-inject');
@@ -114,6 +115,15 @@ gulp.task('import_framework_scripts', () => {
 
 gulp.task('import_framework', gulp.series(['import_framework_styles', 'import_framework_scripts']))
 
+
+gulp.task('css', () => {
+    return gulp.src('src/styles.css')
+        .pipe(postcss([
+            require('tailwindcss'),
+            require('autoprefixer'),
+        ]))
+        .pipe(gulp.dest('build/'))
+})
 
 
 
