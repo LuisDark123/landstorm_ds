@@ -8,7 +8,7 @@ Esta construido con Gulp mediante tareas para realizar la construcción del siti
 ## Instalación de Gulp y dependencias
 
 ```bash
-npm install --save-dev gulp gulp-cli gulp-watch gulp-inject gulp-concat gulp-clean gulp-ext-replace gulp-htmlmin gulp-pug gulp-sass gulp-clean-css gulp-purgecss gulp-autoprefixer gulp-uglify gulp-imagemin gulp-sitemap gulp-gh-pages critical node-sass browser-sync imagemin-webp
+npm install --save-dev gulp gulp-cli gulp-watch gulp-inject gulp-concat gulp-clean gulp-ext-replace gulp-htmlmin gulp-pug gulp-sass gulp-clean-css gulp-purgecss gulp-autoprefixer gulp-uglify gulp-imagemin gulp-sitemap gulp-gh-pages critical node-sass browser-sync imagemin-webp tailwindcss
 ```
 
 ## Subir el proyecto a producción en Github Pages
