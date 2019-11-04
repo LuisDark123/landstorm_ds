@@ -19,6 +19,7 @@ const critical = require('critical').stream;
 const purgecss = require('gulp-purgecss');
 const inject = require('gulp-inject');
 const htmlmin = require('gulp-htmlmin');
+const tailwindcss = require('tailwindcss');
 const browserSync = require('browser-sync').create();
 
 
@@ -38,7 +39,7 @@ const plugins = [
 
 // Configuración de los Componentes que se utilizaran en el proyecto
 const componentsRute = `./src/app/components/`;
-const componentsExtension = `/*.{js,scss}`;
+const componentsExtension = `/*.{js,css}`;
 
 const components = [
     `${componentsRute}headers/header_welcome${componentsExtension}`,
@@ -95,38 +96,6 @@ gulp.task('create_basic_folders', gulp.series(['create_dist', 'clean_dist', 'cre
 
 
 
-// Compilación de SASS y conversion a CSS del Framework
-gulp.task('import_framework_styles', () => {
-    return gulp.src(`./src/core/framework/styles/*.scss`)
-        .pipe(sass())
-        .pipe(autoprefixer())
-        .pipe(concat('01-framework.css'))
-        .pipe(gulp.dest(`./dist/`))
-        .pipe(browserSync.stream());
-});
-
-// Minificación y concatenación de JS del Framework
-gulp.task('import_framework_scripts', () => {
-    return gulp.src(`./src/core/framework/**/*.js`)
-        .pipe(concat('01-framework.js'))
-        .pipe(gulp.dest(`./dist/`))
-        .pipe(browserSync.stream());
-});
-
-gulp.task('import_framework', gulp.series(['import_framework_styles', 'import_framework_scripts']))
-
-
-gulp.task('css', () => {
-    return gulp.src('src/styles.css')
-        .pipe(postcss([
-            require('tailwindcss'),
-            require('autoprefixer'),
-        ]))
-        .pipe(gulp.dest('build/'))
-})
-
-
-
 // Importación de los componentes seleccionados
 gulp.task('import_components_assets', () => {
     return gulp.src(components)
@@ -135,12 +104,11 @@ gulp.task('import_components_assets', () => {
 
 // Generación de la hoja de estilos de los componentes
 gulp.task('generate_component_styles', () => {
-    return gulp.src(`./src/core/generator/bundle-components/*.scss`)
-        .pipe(sass())
+    return gulp.src(`./src/core/generator/bundle-components/*.css`)
         .pipe(autoprefixer())
-        .pipe(concat('02-components.css'))
-        .pipe(gulp.dest(`./dist/`))
-        .pipe(browserSync.stream());
+        .pipe(concat('all-components.css'))
+        .pipe(gulp.dest(`./src/core/generator/bundle-components/`))
+        .pipe(browserSync.stream())
 });
 
 // Generación de los scripts de los componentes
@@ -155,6 +123,16 @@ gulp.task('generate_component_scripts', () => {
 gulp.task('import_components', gulp.series(['import_components_assets', 'generate_component_styles', 'generate_component_scripts']));
 
 
+// Importar el framework css
+gulp.task('import_framework', () => {
+    return gulp.src(['./src/core/design/tailwind-first.css', './src/core/generator/bundle-components/all-components.css', './src/core/design/tailwind-last.css'])
+        .pipe(postcss([
+            tailwindcss,
+            autoprefixer,
+        ]))
+        .pipe(concat('tailwind-framework.css'))
+        .pipe(gulp.dest('./src/core/generator/bundle-framework/'))
+})
 
 
 // Importación de los Plugins
@@ -269,7 +247,7 @@ gulp.task('server', () => {
 });
 
 
-gulp.task('dev', gulp.series(['create_basic_folders', 'import_framework', 'import_components', 'import_plugins', 'import_pages', 'import_pages', 'import_assets']));
+gulp.task('dev', gulp.series(['create_basic_folders', 'import_components', 'import_framework', 'import_plugins', 'import_pages', 'import_pages', 'import_assets']));
 
 
 
