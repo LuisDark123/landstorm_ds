@@ -60,9 +60,8 @@ const sitemapPriority = '1.0'; // 0.0 to 1.0
 
 
 // --------------------------------------------------------------------------------------------
-// ----- Gulp Tasks ---------------------------------------------------------------------------
+// ----- Crear y limpiar los directorios principales ------------------------------------------
 // --------------------------------------------------------------------------------------------
-
 
 // Crear la carpeta dist
 gulp.task('create_dist', () => {
@@ -76,9 +75,6 @@ gulp.task('clean_dist', () => {
         .pipe(clean())
 });
 
-
-
-
 // Crear el directorio generator
 gulp.task('create_generator', () => {
     return gulp.src(`./src/`)
@@ -91,77 +87,82 @@ gulp.task('clean_generator', () => {
         .pipe(clean())
 });
 
-gulp.task('create_basic_folders', gulp.series(['create_dist', 'clean_dist', 'create_generator', 'clean_generator']));
+gulp.task('create_folders', gulp.series(['create_dist', 'clean_dist', 'create_generator', 'clean_generator']));
 
 
+// --------------------------------------------------------------------------------------------
+// ---- Importar las hojas de estilos ---------------------------------------------------------
+// --------------------------------------------------------------------------------------------
 
-
-// Importación de los componentes seleccionados
-gulp.task('import_components_assets', () => {
-    return gulp.src(components)
-        .pipe(gulp.dest(`./src/core/generator/bundle-components/`))
-});
-
-// Generación de la hoja de estilos de los componentes
-gulp.task('generate_component_styles', () => {
-    return gulp.src(`./src/core/generator/bundle-components/*.css`)
-        .pipe(autoprefixer())
-        .pipe(concat('all-components.css'))
-        .pipe(gulp.dest(`./src/core/generator/bundle-components/`))
-        .pipe(browserSync.stream())
-});
-
-// Generación de los scripts de los componentes
-gulp.task('generate_component_scripts', () => {
-    return gulp.src(`./src/core/generator/bundle-components/*.js`)
-        .pipe(concat('02-components.js'))
-        .pipe(uglify())
-        .pipe(gulp.dest(`./dist/`))
-        .pipe(browserSync.stream());
-});
-
-gulp.task('import_components', gulp.series(['import_components_assets', 'generate_component_styles', 'generate_component_scripts']));
-
-
-// Importar el framework css
-gulp.task('import_framework', () => {
-    return gulp.src(['./src/core/design/tailwind-first.css', './src/core/generator/bundle-components/all-components.css', './src/core/design/tailwind-last.css'])
+// Importar los estilos de los componentes
+gulp.task('import_components_styles', () => {
+    return gulp.src('./src/app/components/**/*.css')
         .pipe(postcss([
             tailwindcss,
             autoprefixer,
         ]))
-        .pipe(concat('tailwind-framework.css'))
-        .pipe(gulp.dest('./src/core/generator/bundle-framework/'))
-})
-
-
-// Importación de los Plugins
-gulp.task('import_plugins_assets', () => {
-    return gulp.src(plugins)
-        .pipe(gulp.dest(`./src/core/generator/bundle-plugins/`))
+        .pipe(concat('components.css'))
+        .pipe(gulp.dest('./dist/'))
 });
 
-// Generación de la hoja de estilos de los plugins
-gulp.task('generate_plugin_styles', () => {
-    return gulp.src(`./src/core/generator/bundle-plugins/*.css`)
-        .pipe(sass())
-        .pipe(autoprefixer())
-        .pipe(concat('03-plugins.css'))
-        .pipe(gulp.dest(`./dist/`))
+// Importar los estilos de los plugins
+gulp.task('import_plugins_styles', () => {
+    return gulp.src('./src/core/plugins/**/*.css')
+        .pipe(postcss([
+            autoprefixer,
+        ]))
+        .pipe(concat('plugins.css'))
+        .pipe(gulp.dest('./dist/'))
 });
 
-// Generación de los scripts de los plugins
-gulp.task('generate_plugin_scripts', () => {
-    return gulp.src(`./src/core/generator/bundle-plugins/*.js`)
-        .pipe(concat('03-plugins.js'))
-        .pipe(uglify())
-        .pipe(gulp.dest(`./dist/`))
+// Importar los estilos base
+gulp.task('import_base_styles', () => {
+    return gulp.src('./src/core/design/base.css')
+        .pipe(postcss([
+            tailwindcss,
+            autoprefixer,
+        ]))
+        .pipe(concat('base.css'))
+        .pipe(gulp.dest('./dist/'))
 });
 
-gulp.task('import_plugins', gulp.series(['import_plugins_assets', 'generate_plugin_styles', 'generate_plugin_scripts']));
+// Importar los estilos del framework
+gulp.task('import_framework_styles', () => {
+    return gulp.src('./src/core/design/framework.css')
+        .pipe(postcss([
+            tailwindcss,
+            autoprefixer,
+        ]))
+        .pipe(concat('framework.css'))
+        .pipe(gulp.dest('./dist/'))
+});
+
+gulp.task('import_styles', gulp.series(['import_components_styles', 'import_plugins_styles', 'import_base_styles', 'import_framework_styles']))
 
 
+// --------------------------------------------------------------------------------------------
+// ---- Importar las hojas de scripts  --------------------------------------------------------
+// --------------------------------------------------------------------------------------------
 
+// Importar los scripts de los plugins
+gulp.task('import_plugins_scripts', () => {
+    return gulp.src('./src/core/plugins/**/*.js')
+        .pipe(concat('plugins.js'))
+        .pipe(gulp.dest('./dist/'))
+});
+
+// Importar los scripts de los componentes
+gulp.task('import_components_scripts', () => {
+    return gulp.src('./src/app/components/**/*.js')
+        .pipe(concat('components.js'))
+        .pipe(gulp.dest('./dist/'))
+});
+
+gulp.task('import_scripts', gulp.series(['import_plugins_scripts', 'import_components_scripts']))
+
+// --------------------------------------------------------------------------------------------
+// ---- Creacion de las paginas html ----------------------------------------------------------
+// --------------------------------------------------------------------------------------------
 
 // Compilación de Pug a Html
 gulp.task('compile_pug', () => {
@@ -182,6 +183,9 @@ gulp.task('inject_cdns', () => {
 gulp.task('import_pages', gulp.series(['compile_pug', 'inject_cdns']));
 
 
+// --------------------------------------------------------------------------------------------
+// ---- Importacion de los recursos -----------------------------------------------------------
+// --------------------------------------------------------------------------------------------
 
 
 // Manejo de las fuentes web
@@ -239,15 +243,11 @@ gulp.task('server', () => {
         server: `./dist/`
     });
 
-    gulp.watch(`./src/core/framework/**/*.scss`, gulp.parallel(['import_framework_styles']));
-    gulp.watch(`./src/core/framework/**/*.js`, gulp.parallel(['import_framework_scripts']));
-    gulp.watch(`./src/app/components/**/*.scss`, gulp.series(['import_components_assets', 'generate_component_styles']));
-    gulp.watch(`./src/app/components/**/*.js`, gulp.series(['import_components_assets', 'generate_component_scripts']));
+    gulp.watch(`./src/app/components/**/*.css`, gulp.series(['import_component_assets', 'generate_component_styles', 'generate_base_stylesheet']));
+    gulp.watch(`./src/app/components/**/*.js`, gulp.series(['import_component_assets', 'generate_component_scripts', 'generate_base_script']));
     gulp.watch(`./src/app/**/*.pug`, gulp.parallel(['import_pages']));
+
 });
-
-
-gulp.task('dev', gulp.series(['create_basic_folders', 'import_components', 'import_framework', 'import_plugins', 'import_pages', 'import_pages', 'import_assets']));
 
 
 
