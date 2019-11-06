@@ -20,6 +20,7 @@ const purgecss = require('gulp-purgecss');
 const inject = require('gulp-inject');
 const htmlmin = require('gulp-htmlmin');
 const tailwindcss = require('tailwindcss');
+const strip = require('gulp-strip-comments');
 const browserSync = require('browser-sync').create();
 
 
@@ -278,7 +279,6 @@ gulp.task('prepare_framework', () => {
         .pipe(purgecss({
             content: [`./dist/**/*.html`]
         }))
-        .pipe(cleanCSS())
         .pipe(gulp.dest(`./src/core/generator/`));
 });
 
@@ -286,7 +286,6 @@ gulp.task('prepare_framework', () => {
 gulp.task('prepare_styles', () => {
     return gulp.src([`./dist/css/*.css`, `!./dist/css/framework.css`])
         .pipe(concat('all_styles.css'))
-        .pipe(cleanCSS())
         .pipe(gulp.dest(`./src/core/generator/`));
 });
 
@@ -343,6 +342,7 @@ gulp.task('generate_critical', () => {
 // Minificación de los archivos html
 gulp.task('minify_html', () => {
     return gulp.src(`./dist/**/*.html`)
+        .pipe(strip({ ignore: /url\([\w\s:\/=\-\+;,]*\)/g }))
         .pipe(htmlmin({ collapseWhitespace: true }))
         .pipe(gulp.dest(`./dist/`));
 });
