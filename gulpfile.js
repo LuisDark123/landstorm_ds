@@ -75,19 +75,8 @@ gulp.task('clean_dist', () => {
         .pipe(clean())
 });
 
-// Crear el directorio generator
-gulp.task('create_generator', () => {
-    return gulp.src(`./src/`)
-        .pipe(gulp.dest(`./src/core/generator/`))
-});
 
-// Limpiar la carpeta generator
-gulp.task('clean_generator', () => {
-    return gulp.src(`./src/core/generator/*`)
-        .pipe(clean())
-});
-
-gulp.task('create_folders', gulp.series(['create_dist', 'clean_dist', 'create_generator', 'clean_generator']));
+gulp.task('create_folders', gulp.series(['create_dist', 'clean_dist']));
 
 
 // --------------------------------------------------------------------------------------------
@@ -102,7 +91,7 @@ gulp.task('import_components_styles', () => {
             autoprefixer,
         ]))
         .pipe(concat('components.css'))
-        .pipe(gulp.dest('./dist/'))
+        .pipe(gulp.dest('./dist/css/'))
 });
 
 // Importar los estilos de los plugins
@@ -112,7 +101,7 @@ gulp.task('import_plugins_styles', () => {
             autoprefixer,
         ]))
         .pipe(concat('plugins.css'))
-        .pipe(gulp.dest('./dist/'))
+        .pipe(gulp.dest('./dist/css/'))
 });
 
 // Importar los estilos base
@@ -123,7 +112,7 @@ gulp.task('import_base_styles', () => {
             autoprefixer,
         ]))
         .pipe(concat('base.css'))
-        .pipe(gulp.dest('./dist/'))
+        .pipe(gulp.dest('./dist/css/'))
 });
 
 // Importar los estilos del framework
@@ -134,7 +123,7 @@ gulp.task('import_framework_styles', () => {
             autoprefixer,
         ]))
         .pipe(concat('framework.css'))
-        .pipe(gulp.dest('./dist/'))
+        .pipe(gulp.dest('./dist/css/'))
 });
 
 gulp.task('import_styles', gulp.series(['import_components_styles', 'import_plugins_styles', 'import_base_styles', 'import_framework_styles']))
@@ -148,17 +137,19 @@ gulp.task('import_styles', gulp.series(['import_components_styles', 'import_plug
 gulp.task('import_plugins_scripts', () => {
     return gulp.src('./src/core/plugins/**/*.js')
         .pipe(concat('plugins.js'))
-        .pipe(gulp.dest('./dist/'))
+        .pipe(gulp.dest('./dist/js/'))
 });
 
 // Importar los scripts de los componentes
 gulp.task('import_components_scripts', () => {
     return gulp.src('./src/app/components/**/*.js')
         .pipe(concat('components.js'))
-        .pipe(gulp.dest('./dist/'))
+        .pipe(gulp.dest('./dist/js/'))
 });
 
 gulp.task('import_scripts', gulp.series(['import_plugins_scripts', 'import_components_scripts']))
+
+
 
 // --------------------------------------------------------------------------------------------
 // ---- Creacion de las paginas html ----------------------------------------------------------
@@ -236,7 +227,12 @@ gulp.task('import_video', () => {
 gulp.task('import_assets', gulp.series(['import_font', 'import_favicon', 'import_images', 'convert_images_webp', 'import_video']));
 
 
-// Servidor con Browsersync
+
+// --------------------------------------------------------------------------------------------
+// ---- Servidor con Browsersync -----------------------------------------------------------
+// --------------------------------------------------------------------------------------------
+
+
 gulp.task('server', () => {
 
     browserSync.init({
@@ -257,63 +253,61 @@ gulp.task('server', () => {
 // ----- Configuración para Producción --------------------------------------------------------
 // --------------------------------------------------------------------------------------------
 
-// Crear la carpeta deploy
-gulp.task('create_deploy', () => {
+// Crear el directorio generator
+gulp.task('create_generator', () => {
     return gulp.src(`./src/`)
-        .pipe(gulp.dest(`./src/core/generator/deploy/`))
+        .pipe(gulp.dest(`./src/core/generator/`))
 });
 
-// Limpiar la carpeta deploy
-gulp.task('clean_deploy', () => {
-    return gulp.src(`./src/core/generator//deploy/*`)
+// Limpiar la carpeta generator
+gulp.task('clean_generator', () => {
+    return gulp.src(`./src/core/generator/*`)
         .pipe(clean())
 });
 
 // Importar los archivos html
 gulp.task('prepare_html', () => {
     return gulp.src(`./dist/**/*.html`)
-        .pipe(gulp.dest(`./src/core/generator/deploy/`));
+        .pipe(gulp.dest(`./src/core/generator/`));
 });
 
 // Realizar la purga de los estilos del framework
 gulp.task('prepare_framework', () => {
-    return gulp.src(`./dist/01-framework.css`)
+    return gulp.src(`./dist/css/framework.css`)
         .pipe(concat('framework_purge.css'))
-        .pipe(autoprefixer())
         .pipe(purgecss({
             content: [`./dist/**/*.html`]
         }))
         .pipe(cleanCSS())
-        .pipe(gulp.dest(`./src/core/generator/deploy/`));
+        .pipe(gulp.dest(`./src/core/generator/`));
 });
 
-// Importar los scripts del framework, los componentes y los plugins
-gulp.task('prepare_js_files', () => {
-    return gulp.src(`./dist/**/*.js`)
-        .pipe(gulp.dest(`./src/core/generator/deploy/`))
-});
-
-// Importar los estilos de los componentes y los plugins
-gulp.task('prepare_addons', () => {
-    return gulp.src([`./dist/*.css`, `!./dist/01-framework.css`])
-        .pipe(concat('addons_styles.css'))
-        .pipe(autoprefixer())
+// Importar el resto de las hojas de estilos
+gulp.task('prepare_styles', () => {
+    return gulp.src([`./dist/css/*.css`, `!./dist/css/framework.css`])
+        .pipe(concat('all_styles.css'))
         .pipe(cleanCSS())
-        .pipe(gulp.dest(`./src/core/generator/deploy/`));
+        .pipe(gulp.dest(`./src/core/generator/`));
+});
+
+// Importar todos los scripts de dist
+gulp.task('prepare_js_files', () => {
+    return gulp.src(`./dist/js/*.js`)
+        .pipe(gulp.dest(`./src/core/generator/`))
 });
 
 // Generación de la hoja de estilos maestra
 gulp.task('generate_master_stylesheet', () => {
-    return gulp.src([`./src/core/generator/deploy/framework_purge.css`, `./src/core/generator/deploy/addons_styles.css`])
+    return gulp.src([`./src/core/generator/all_styles.css`, `./src/core/generator/framework_purge.css`])
         .pipe(concat(cssFilename))
-        .pipe(autoprefixer())
+        .pipe(autoprefixer('last 2 versions'))
         .pipe(cleanCSS())
         .pipe(gulp.dest(`./dist/`));
 });
 
 // Generación de la hoja de scripts maestra
 gulp.task('generate_master_scripts', () => {
-    return gulp.src(`./src/core/generator/deploy/*.js`)
+    return gulp.src(`./src/core/generator/*.js`)
         .pipe(concat(jsFilename))
         .pipe(uglify())
         .pipe(gulp.dest(`./dist/`))
@@ -321,7 +315,7 @@ gulp.task('generate_master_scripts', () => {
 
 // Generación de las paginas maestras
 gulp.task('generate_master_html', () => {
-    return gulp.src(`./src/core/generator/deploy/**/*.html`)
+    return gulp.src(`./src/core/generator/**/*.html`)
         .pipe(gulp.dest(`./dist/`));
 });
 
@@ -365,4 +359,11 @@ gulp.task('create_sitemap', () => {
         .pipe(gulp.dest(`./dist/`));
 });
 
-gulp.task('build', gulp.series(['create_deploy', 'clean_deploy', 'prepare_html', 'prepare_framework', 'prepare_js_files', 'prepare_addons', 'clean_dist', 'import_assets', 'generate_master_stylesheet', 'generate_master_scripts', 'generate_master_html', 'inject_master_files', 'minify_html', 'minify_html', 'create_sitemap']));
+
+
+// --------------------------------------------------------------------------------------------
+// ----- Tareas principales  ------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------
+
+gulp.task('dev', gulp.series(['create_folders', 'import_styles', 'import_scripts', 'import_pages', 'import_assets', ]));
+gulp.task('build', gulp.series(['create_generator', 'clean_generator', 'prepare_html', 'prepare_framework', 'prepare_js_files', 'prepare_styles', 'clean_dist', 'import_assets', 'generate_master_stylesheet', 'generate_master_scripts', 'generate_master_html', 'inject_master_files', 'minify_html', 'create_sitemap']));
