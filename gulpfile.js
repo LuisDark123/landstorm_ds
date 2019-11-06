@@ -256,107 +256,101 @@ gulp.task('server', () => {
 
 // Crear el directorio generator
 gulp.task('create_generator', () => {
-    return gulp.src(`./src/`)
-        .pipe(gulp.dest(`./src/core/generator/`))
+    return gulp.src('./src/')
+        .pipe(gulp.dest('./src/core/generator/'))
 });
 
 // Limpiar la carpeta generator
 gulp.task('clean_generator', () => {
-    return gulp.src(`./src/core/generator/*`)
+    return gulp.src('./src/core/generator/*')
         .pipe(clean())
 });
 
-// Importar los archivos html
-gulp.task('prepare_html', () => {
-    return gulp.src(`./dist/**/*.html`)
-        .pipe(gulp.dest(`./src/core/generator/`));
+// Importar las hojas principales
+gulp.task('prepare_assets', () => {
+    return gulp.src(['./dist/css/*', './dist/js/*'])
+        .pipe(gulp.dest('./src/core/generator/assets/'))
+});
+
+// Eliminar las carpetas css y js
+gulp.task('delete_sheets', () => {
+    return gulp.src(['./dist/css/', './dist/js/'])
+        .pipe(clean())
 });
 
 // Realizar la purga de los estilos del framework
 gulp.task('prepare_framework', () => {
-    return gulp.src(`./dist/css/framework.css`)
+    return gulp.src('./src/core/generator/assets/framework.css')
         .pipe(concat('framework_purge.css'))
         .pipe(purgecss({
-            content: [`./dist/**/*.html`]
+            content: ['./dist/**/*.html']
         }))
-        .pipe(gulp.dest(`./src/core/generator/`));
+        .pipe(gulp.dest('./src/core/generator/bundle/'));
 });
 
 // Importar el resto de las hojas de estilos
 gulp.task('prepare_styles', () => {
-    return gulp.src([`./dist/css/*.css`, `!./dist/css/framework.css`])
+    return gulp.src(['./src/core/generator/assets/*.css', '!./src/core/generator/assets/framework.css'])
         .pipe(concat('all_styles.css'))
-        .pipe(gulp.dest(`./src/core/generator/`));
-});
-
-// Importar todos los scripts de dist
-gulp.task('prepare_js_files', () => {
-    return gulp.src(`./dist/js/*.js`)
-        .pipe(gulp.dest(`./src/core/generator/`))
+        .pipe(gulp.dest('./src/core/generator/bundle/'));
 });
 
 // Generación de la hoja de estilos maestra
 gulp.task('generate_master_stylesheet', () => {
-    return gulp.src([`./src/core/generator/all_styles.css`, `./src/core/generator/framework_purge.css`])
+    return gulp.src(['./src/core/generator/bundle/all_styles.css', './src/core/generator/bundle/framework_purge.css'])
         .pipe(concat(cssFilename))
         .pipe(autoprefixer('last 2 versions'))
         .pipe(cleanCSS())
-        .pipe(gulp.dest(`./dist/`));
+        .pipe(gulp.dest('./dist/'));
 });
 
 // Generación de la hoja de scripts maestra
 gulp.task('generate_master_scripts', () => {
-    return gulp.src(`./src/core/generator/*.js`)
+    return gulp.src('./src/core/generator/assets/*.js')
         .pipe(concat(jsFilename))
         .pipe(uglify())
-        .pipe(gulp.dest(`./dist/`))
-});
-
-// Generación de las paginas maestras
-gulp.task('generate_master_html', () => {
-    return gulp.src(`./src/core/generator/**/*.html`)
-        .pipe(gulp.dest(`./dist/`));
+        .pipe(gulp.dest('./dist/'))
 });
 
 // Inyección de los archivos maestros
 gulp.task('inject_master_files', () => {
-    return gulp.src(`./dist/**/*.html`)
-        .pipe(inject(gulp.src([`./dist/**/*.js`, `./dist/**/*.css`], { read: false }), { relative: true }))
-        .pipe(gulp.dest(`./dist/`))
+    return gulp.src('./dist/**/*.html')
+        .pipe(inject(gulp.src(['./dist/**/*.js', './dist/**/*.css'], { read: false }), { relative: true }))
+        .pipe(gulp.dest('./dist/'))
 });
 
 // Generación de CSS Critico
 gulp.task('generate_critical', () => {
     return gulp
-        .src(`./dist/**/*.html`)
+        .src('./dist/**/*.html')
         .pipe(critical({
-            base: `dist/`,
+            base: 'dist/',
             inline: true,
             css: [
                 `dist/${cssFilename}`
             ]
         }))
-        .pipe(gulp.dest(`./dist/`));
+        .pipe(gulp.dest('./dist/'));
 });
 
 // Minificación de los archivos html
 gulp.task('minify_html', () => {
-    return gulp.src(`./dist/**/*.html`)
+    return gulp.src('./dist/**/*.html')
         .pipe(strip({ ignore: /url\([\w\s:\/=\-\+;,]*\)/g }))
         .pipe(htmlmin({ collapseWhitespace: true }))
-        .pipe(gulp.dest(`./dist/`));
+        .pipe(gulp.dest('./dist/'));
 });
 
 // Creación de sitemap
 gulp.task('create_sitemap', () => {
-    return gulp.src(`./dist/**/*.html`)
+    return gulp.src('./dist/**/*.html')
         .pipe(sitemap({
             siteUrl: sitemapUrl,
             changefreq: sitemapFrequence,
             priority: sitemapPriority,
             images: true
         }))
-        .pipe(gulp.dest(`./dist/`));
+        .pipe(gulp.dest('./dist/'));
 });
 
 
@@ -366,4 +360,4 @@ gulp.task('create_sitemap', () => {
 // --------------------------------------------------------------------------------------------
 
 gulp.task('dev', gulp.series(['create_folders', 'import_styles', 'import_scripts', 'import_pages', 'import_assets', ]));
-gulp.task('build', gulp.series(['create_generator', 'clean_generator', 'prepare_html', 'prepare_framework', 'prepare_js_files', 'prepare_styles', 'clean_dist', 'import_assets', 'generate_master_stylesheet', 'generate_master_scripts', 'generate_master_html', 'inject_master_files', 'minify_html', 'create_sitemap']));
+gulp.task('build', gulp.series(['create_generator', 'clean_generator', 'prepare_assets', 'delete_sheets', 'prepare_framework', 'prepare_styles', 'generate_master_stylesheet', 'generate_master_scripts', 'inject_master_files', 'generate_critical', 'minify_html', 'create_sitemap']))
