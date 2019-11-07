@@ -29,32 +29,7 @@ const browserSync = require('browser-sync').create();
 // --------------------------------------------------------------------------------------------
 
 const sitemapConfig = require('./config/sitemap.config.js');
-
-
-
-
-
-// Configuración de los Plugins que se utilizaran en el proyecto
-const pluginsRute = `./src/core/plugins/`;
-const pluginsExtension = `/*.{js,css}`;
-
-const plugins = [
-    `${pluginsRute}blazy${pluginsExtension}`,
-];
-
-
-// Configuración de los Componentes que se utilizaran en el proyecto
-const componentsRute = `./src/app/components/`;
-const componentsExtension = `/*.{js,css}`;
-
-const components = [
-    `${componentsRute}headers/header_welcome${componentsExtension}`,
-];
-
-
-// Configuración del nombre de los archivos CSS y JS generados por el Framework Landstorm
-const jsFilename = 'landstorm-cdn-script.js'; // Nombre del archivo maestro Javascript
-const cssFilename = 'landstorm-cdn-stylesheet.css'; // Nombre del archivo maestro CSS
+const projectConfig = require('./config/project.config.js');
 
 
 
@@ -297,7 +272,7 @@ gulp.task('prepare_styles', () => {
 // Generación de la hoja de estilos maestra
 gulp.task('generate_master_stylesheet', () => {
     return gulp.src(['./src/core/generator/bundle/all_styles.css', './src/core/generator/bundle/framework_purge.css'])
-        .pipe(concat(cssFilename))
+        .pipe(concat(projectConfig.cssFilename))
         .pipe(autoprefixer('last 2 versions'))
         .pipe(cleanCSS())
         .pipe(gulp.dest('./dist/'));
@@ -306,7 +281,7 @@ gulp.task('generate_master_stylesheet', () => {
 // Generación de la hoja de scripts maestra
 gulp.task('generate_master_scripts', () => {
     return gulp.src('./src/core/generator/assets/*.js')
-        .pipe(concat(jsFilename))
+        .pipe(concat(projectConfig.jsFilename))
         .pipe(uglify())
         .pipe(gulp.dest('./dist/'))
 });
@@ -326,7 +301,7 @@ gulp.task('generate_critical', () => {
             base: 'dist/',
             inline: true,
             css: [
-                `dist/${cssFilename}`
+                `dist/${projectConfig.cssFilename}`
             ]
         }))
         .pipe(gulp.dest('./dist/'));
@@ -343,7 +318,7 @@ gulp.task('minify_html', () => {
 
 // Creación de sitemap
 gulp.task('create_sitemap', () => {
-    return gulp.src( sitemapConfig.index )
+    return gulp.src(sitemapConfig.pages)
         .pipe(sitemap({
             fileName: sitemapConfig.fileName,
             siteUrl: sitemapConfig.siteUrl,
