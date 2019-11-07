@@ -25,8 +25,13 @@ const browserSync = require('browser-sync').create();
 
 
 // --------------------------------------------------------------------------------------------
-// ----- Configuración del Usuario ------------------------------------------------------------
+// ----- Archivos de configuración ------------------------------------------------------------
 // --------------------------------------------------------------------------------------------
+
+const sitemapConfig = require('./config/sitemap.config.js');
+
+
+
 
 
 // Configuración de los Plugins que se utilizaran en el proyecto
@@ -50,12 +55,6 @@ const components = [
 // Configuración del nombre de los archivos CSS y JS generados por el Framework Landstorm
 const jsFilename = 'landstorm-cdn-script.js'; // Nombre del archivo maestro Javascript
 const cssFilename = 'landstorm-cdn-stylesheet.css'; // Nombre del archivo maestro CSS
-
-
-// Configuración del Sitemap
-const sitemapUrl = 'https://landstorm.dev';
-const sitemapFrequence = 'monthly'; // 'always', 'hourly', 'daily', 'weekly', 'monthly', 'yearly', 'never'
-const sitemapPriority = '1.0'; // 0.0 to 1.0
 
 
 
@@ -237,12 +236,12 @@ gulp.task('import_assets', gulp.series(['import_font', 'import_favicon', 'import
 gulp.task('server', () => {
 
     browserSync.init({
-        server: `./dist/`
+        server: './dist/'
     });
 
-    gulp.watch(`./src/app/components/**/*.css`, gulp.series(['import_component_assets', 'generate_component_styles', 'generate_base_stylesheet']));
-    gulp.watch(`./src/app/components/**/*.js`, gulp.series(['import_component_assets', 'generate_component_scripts', 'generate_base_script']));
-    gulp.watch(`./src/app/**/*.pug`, gulp.parallel(['import_pages']));
+    gulp.watch('./src/app/components/**/*.css', gulp.series(['import_component_assets', 'generate_component_styles', 'generate_base_stylesheet']));
+    gulp.watch('./src/app/components/**/*.js', gulp.series(['import_component_assets', 'generate_component_scripts', 'generate_base_script']));
+    gulp.watch('./src/app/**/*.pug', gulp.parallel(['import_pages']));
 
 });
 
@@ -341,14 +340,16 @@ gulp.task('minify_html', () => {
         .pipe(gulp.dest('./dist/'));
 });
 
+
 // Creación de sitemap
 gulp.task('create_sitemap', () => {
-    return gulp.src('./dist/**/*.html')
+    return gulp.src( sitemapConfig.index )
         .pipe(sitemap({
-            siteUrl: sitemapUrl,
-            changefreq: sitemapFrequence,
-            priority: sitemapPriority,
-            images: true
+            fileName: sitemapConfig.fileName,
+            siteUrl: sitemapConfig.siteUrl,
+            changefreq: sitemapConfig.changefreq,
+            priority: sitemapConfig.priority,
+            images: sitemapConfig.images
         }))
         .pipe(gulp.dest('./dist/'));
 });
