@@ -40,13 +40,13 @@ const projectConfig = require('./config/project.config.js');
 
 // Crear la carpeta dist
 gulp.task('create_dist', () => {
-    return gulp.src(`./src/`)
-        .pipe(gulp.dest(`./dist/`))
+    return gulp.src('./src/')
+        .pipe(gulp.dest('./dist/'))
 });
 
 // Limpiar la carpeta dist
 gulp.task('clean_dist', () => {
-    return gulp.src(`./dist/*`)
+    return gulp.src('./dist/')
         .pipe(clean())
 });
 
@@ -329,10 +329,16 @@ gulp.task('create_sitemap', () => {
 });
 
 
+// Importar el archivo htaccess
+gulp.task('import_htaccess', () => {
+    return gulp.src('./src/core/server/.htaccess')
+        .pipe(gulp.dest('./dist/'))
+});
+
 
 // --------------------------------------------------------------------------------------------
 // ----- Tareas principales  ------------------------------------------------------------------
 // --------------------------------------------------------------------------------------------
 
-gulp.task('dev', gulp.series(['create_folders', 'import_styles', 'import_scripts', 'import_pages', 'import_assets', 'create_sitemap']));
+gulp.task('dev', gulp.series(['create_folders', 'import_styles', 'import_scripts', 'import_pages', 'import_assets', 'create_sitemap', 'import_htaccess']));
 gulp.task('build', gulp.series(['create_generator', 'clean_generator', 'prepare_assets', 'delete_sheets', 'prepare_framework', 'prepare_styles', 'generate_master_stylesheet', 'generate_master_scripts', 'inject_master_files', 'generate_critical', 'minify_html']))
