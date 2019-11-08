@@ -295,13 +295,12 @@ gulp.task('inject_master_files', () => {
 
 // Generación de CSS Critico
 gulp.task('generate_critical', () => {
-    return gulp
-        .src('./dist/**/*.html')
+    return gulp.src('./dist/**/*.html')
         .pipe(critical({
             base: 'dist/',
             inline: true,
             css: [
-                `dist/${projectConfig.cssFilename}`
+                'dist/landstorm-cdn-stylesheet.css'
             ]
         }))
         .pipe(gulp.dest('./dist/'));
@@ -335,5 +334,5 @@ gulp.task('create_sitemap', () => {
 // ----- Tareas principales  ------------------------------------------------------------------
 // --------------------------------------------------------------------------------------------
 
-gulp.task('dev', gulp.series(['create_folders', 'import_styles', 'import_scripts', 'import_pages', 'import_assets', ]));
-gulp.task('build', gulp.series(['create_generator', 'clean_generator', 'prepare_assets', 'delete_sheets', 'prepare_framework', 'prepare_styles', 'generate_master_stylesheet', 'generate_master_scripts', 'inject_master_files', 'generate_critical', 'minify_html', 'create_sitemap']))
+gulp.task('dev', gulp.series(['create_folders', 'import_styles', 'import_scripts', 'import_pages', 'import_assets', 'create_sitemap']));
+gulp.task('build', gulp.series(['create_generator', 'clean_generator', 'prepare_assets', 'delete_sheets', 'prepare_framework', 'prepare_styles', 'generate_master_stylesheet', 'generate_master_scripts', 'inject_master_files', 'generate_critical', 'minify_html']))
