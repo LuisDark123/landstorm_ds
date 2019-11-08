@@ -20,6 +20,7 @@ const inject = require('gulp-inject');
 const htmlmin = require('gulp-htmlmin');
 const tailwindcss = require('tailwindcss');
 const strip = require('gulp-strip-comments');
+const base64 = require('gulp-base64-inline');
 const browserSync = require('browser-sync').create();
 
 
@@ -131,18 +132,18 @@ gulp.task('import_scripts', gulp.series(['import_plugins_scripts', 'import_compo
 
 // Compilación de Pug a Html
 gulp.task('compile_pug', () => {
-    return gulp.src(`./src/app/pages/**/*.pug`)
+    return gulp.src('./src/app/pages/**/*.pug')
         .pipe(pug({ pretty: true }))
-        .pipe(gulp.dest(`./dist/`))
+        .pipe(gulp.dest('./dist/'))
         .pipe(browserSync.stream());
 });
 
 
 // Inyección de CDNs
 gulp.task('inject_cdns', () => {
-    return gulp.src(`./dist/**/*.html`)
-        .pipe(inject(gulp.src([`./dist/**/*.js`, `./dist/**/*.css`], { read: false }), { relative: true }))
-        .pipe(gulp.dest(`./dist`))
+    return gulp.src('./dist/**/*.html')
+        .pipe(inject(gulp.src(['./dist/**/*.js', './dist/**/*.css'], { read: false }), { relative: true }))
+        .pipe(gulp.dest('./dist'))
 });
 
 gulp.task('import_pages', gulp.series(['compile_pug', 'inject_cdns']));
@@ -155,19 +156,19 @@ gulp.task('import_pages', gulp.series(['compile_pug', 'inject_cdns']));
 
 // Manejo de las fuentes web
 gulp.task('import_font', () => {
-    return gulp.src(`./src/assets/fonts/**`)
-        .pipe(gulp.dest(`./dist/`))
+    return gulp.src('./src/assets/fonts/**')
+        .pipe(gulp.dest('./dist/'))
 });
 
 // Manejo del favicon
 gulp.task('import_favicon', () => {
-    return gulp.src(`./src/assets/images/favicons/**`)
-        .pipe(gulp.dest(`./dist/favicons/`))
+    return gulp.src('./src/assets/images/favicons/**')
+        .pipe(gulp.dest('./dist/favicons/'))
 });
 
 // Minificado de las imagenes jpg y png
 gulp.task('import_images', () => {
-    return gulp.src([`./src/assets/images/x1/*.{png,jpg,jpeg}`, `./src/assets/images/x2/*.{png,jpg,jpeg}`])
+    return gulp.src(['./src/assets/images/x1/*.{png,jpg,jpeg}', './src/assets/images/x2/*.{png,jpg,jpeg}'])
         .pipe(imagemin([
             imagemin.gifsicle({ interlaced: true }),
             imagemin.jpegtran({ progressive: true }),
@@ -179,26 +180,38 @@ gulp.task('import_images', () => {
                 ]
             })
         ]))
-        .pipe(gulp.dest(`./dist/images/`))
+        .pipe(gulp.dest('./dist/images/'))
 });
 
 // Conversión de imagenes webp
 gulp.task('convert_images_webp', () => {
-    return gulp.src([`./src/assets/images/x1/*.{png,jpg,jpeg}`, `./src/assets/images/x2/*.{png,jpg,jpeg}`])
+    return gulp.src(['./src/assets/images/x1/*.{png,jpg,jpeg}', './src/assets/images/x2/*.{png,jpg,jpeg}'])
         .pipe(imagemin([
             webp({ quality: 100 })
         ]))
         .pipe(extReplace('.webp'))
-        .pipe(gulp.dest(`./dist/images/`))
+        .pipe(gulp.dest('./dist/images/'))
 })
 
 // Manejo de los Videos locales
 gulp.task('import_video', () => {
-    return gulp.src(`./src/assets/videos/**`)
-        .pipe(gulp.dest(`./dist/videos/`))
+    return gulp.src('./src/assets/videos/**')
+        .pipe(gulp.dest('./dist/videos/'))
 });
 
 gulp.task('import_assets', gulp.series(['import_font', 'import_favicon', 'import_images', 'convert_images_webp', 'import_video']));
+
+gulp.task('base64_css', () => {
+    return gulp.src('./dist/css/components.css')
+        .pipe(base64())
+        .pipe(gulp.dest('./dist/css/'))
+});
+
+gulp.task('base_html', () => {
+    return gulp.src('./dist/**/*.html')
+        .pipe(base64())
+        .pipe(gulp.dest('./dist/'));
+});
 
 
 
@@ -299,7 +312,7 @@ gulp.task('generate_critical', () => {
             base: 'dist/',
             inline: true,
             css: [
-                'dist/landstorm-cdn-stylesheet.css'
+                `dist/landstorm-cdn-stylesheet.css`
             ]
         }))
         .pipe(gulp.dest('./dist/'));
@@ -339,5 +352,5 @@ gulp.task('import_htaccess', () => {
 // ----- Tareas principales  ------------------------------------------------------------------
 // --------------------------------------------------------------------------------------------
 
-gulp.task('dev', gulp.series(['create_folders', 'import_styles', 'import_scripts', 'import_pages', 'import_assets', 'create_sitemap', 'import_htaccess']));
+gulp.task('dev', gulp.series(['create_folders', 'import_styles', 'import_scripts', 'import_pages', 'import_assets', 'create_sitemap', 'import_htaccess', 'base64_css', 'base_html']));
 gulp.task('build', gulp.series(['create_generator', 'clean_generator', 'prepare_assets', 'delete_sheets', 'prepare_framework', 'prepare_styles', 'generate_master_stylesheet', 'generate_master_scripts', 'inject_master_files', 'generate_critical', 'minify_html']))

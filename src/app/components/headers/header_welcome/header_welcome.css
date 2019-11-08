@@ -1,6 +1,7 @@
-.container-full  {
+.custom {
   @apply bg-red-500  font-bold py-2 px-4 rounded;
 }
-.container-full:hover {
-  @apply bg-red-700;
+
+.star {
+  background: inline('../images/platzi.png');
 }
