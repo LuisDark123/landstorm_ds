@@ -1,0 +1,28 @@
+# Quitar el www del nombre de dominio  
+RewriteCond %{HTTP_HOST} ^www\.tudominio\.com$ [NC]  
+RewriteRule ^(.*)$ http://tudominio.com/$1 [R=301,QSA,L] 
+
+# Forzar el sitio a https
+RewriteEngine On
+RewriteCond %{SERVER_PORT} 80
+RewriteRule ^(.*)$ https://tudominio.com/$1 [R=301,L]
+
+# Configuración de la pagina 404
+ErrorDocument 404 /404.html
+
+# Eliminar las extenciones html y php de las urls
+<IfModule mod_rewrite.c>
+RewriteEngine on
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.*)$ $1.php
+#RewriteRule ^([a-z]+)/?$ $1.php [NC]
+
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(.*)$ $1.html
+#RewriteRule ^([a-z]+)/?$ $1.html [NC]
+
+</IfModule>
