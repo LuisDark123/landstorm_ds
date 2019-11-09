@@ -14,7 +14,8 @@ const imagemin = require('gulp-imagemin');
 const extReplace = require('gulp-ext-replace');
 const webp = require('imagemin-webp');
 const postcss = require('gulp-postcss')
-const critical = require('critical').stream;
+const log = require('fancy-log');
+const critical = require('critical');
 const purgecss = require('gulp-purgecss');
 const inject = require('gulp-inject');
 const htmlmin = require('gulp-htmlmin');
@@ -307,16 +308,33 @@ gulp.task('inject_master_files', () => {
 
 // Generación de CSS Critico
 gulp.task('generate_critical', () => {
-    return gulp.src('./dist/**/*.html')
+    return gulp.src('./dist/*.html')
         .pipe(critical({
             base: 'dist/',
             inline: true,
             css: [
-                `dist/landstorm-cdn-stylesheet.css`
-            ]
+                'dist/landstorm-cdn-stylesheet.css'
+            ],
         }))
         .pipe(gulp.dest('./dist/'));
 });
+
+// Generate & Inline Critical-path CSS
+gulp.task('ssscritical', () => {
+    return gulp.src('./dist/*.html')
+        .pipe(critical({
+            base: 'dist/',
+            inline: true,
+            css: [
+                'dist/landstorm-cdn-stylesheet.css'
+            ]
+        }))
+        .on('error', err => {
+            log.error(err.message);
+        })
+        .pipe(gulp.dest('./dist/'));
+});
+
 
 // Minificación de los archivos html
 gulp.task('minify_html', () => {
