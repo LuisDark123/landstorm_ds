@@ -1,1 +1,1 @@
-console.log('hola mundo')
+console.log('Powered by Landstorm Developer System v1')

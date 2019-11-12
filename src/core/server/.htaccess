@@ -9,6 +9,7 @@ RewriteRule ^(.*)$ https://tudominio.com/$1 [R=301,L]
 
 # Configuración de la pagina 404
 ErrorDocument 404 /404.html
+ErrorDocument 500 /404.html
 
 # Eliminar las extenciones html y php de las urls
 <IfModule mod_rewrite.c>
